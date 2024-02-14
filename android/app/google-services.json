@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "892178368432",
+    "project_id": "uober-1ea68",
+    "storage_bucket": "uober-1ea68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892178368432:android:2ae7f064651331d7387875",
+        "android_client_info": {
+          "package_name": "com.example.uober"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE7a0H835hPtBcnv_MsApr9KDVHNY3U0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
