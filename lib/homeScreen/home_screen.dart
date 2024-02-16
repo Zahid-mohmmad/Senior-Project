@@ -1251,7 +1251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 final phone =
                                     "973$phoneNumberDriver"; // Concatenating Bahrain country code
                                 const message =
-                                    "Hello, I'm the one who requested for the ride ."; // Your pre-filled message
+                                    "Hello, I'm the one who requested for the ride ."; //  pre-filled message
                                 final url =
                                     "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
 
