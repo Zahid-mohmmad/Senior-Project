@@ -1110,212 +1110,203 @@ class _HomeScreenState extends State<HomeScreen> {
 
               //trip details container
               // Positioned widget containing the trip details container
+
               Positioned(
                 left: 0,
                 right: 0,
                 bottom: 0,
-                child: SingleChildScrollView(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 0.0,
-                          spreadRadius: 0.5,
-                          offset: Offset(0.7, 0.7),
-                        ),
-                      ],
+                child: Container(
+                  height: tripContainerHeight,
+                  decoration: const BoxDecoration(
+                    color:
+                        Colors.black, // Added background color for visibility
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 18),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 5),
-
-                          // Display the details of the trip
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                tripStatusDisplay,
-                                style: GoogleFonts.roboto(
-                                    fontSize: 19, color: Colors.white),
-                              )
-                            ],
-                          ),
-
-                          const SizedBox(height: 19),
-
-                          // A divider
-                          const Divider(
-                              height: 1, color: Colors.amber, thickness: 1),
-
-                          const SizedBox(height: 19),
-
-                          // Display the image of the driver photo, name, gender, and car details
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ClipOval(
-                                child: Image.network(
-                                  // If any problem occurs with the driver photo, show the default image of a driver
-                                  photoDriver == ''
-                                      ? "https://firebasestorage.googleapis.com/v0/b/uober-1ea68.appspot.com/o/driveral.png?alt=media&token=29671c17-00d8-4bf9-9474-adb3d3b6a43f"
-                                      : photoDriver,
-                                  width: 60,
-                                  height: 60,
-                                  fit: BoxFit.cover,
-                                ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 0.5, // Adjusted blur radius for shadow
+                        spreadRadius: 0.5,
+                        offset: Offset(0.0, 0.0),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 18),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 5),
+                        // Display the details of the trip
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              tripStatusDisplay,
+                              style: GoogleFonts.roboto(
+                                  fontSize: 19,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        // A divider
+                        Container(
+                          height: 1,
+                          color: Colors
+                              .amber, // Changed color to amber for visibility
+                        ),
+                        const SizedBox(height: 19),
+                        // Display the image of the driver photo, name, gender, and car details
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipOval(
+                              child: Image.network(
+                                photoDriver == ''
+                                    ? "https://firebasestorage.googleapis.com/v0/b/uober-1ea68.appspot.com/o/driveral.png?alt=media&token=29671c17-00d8-4bf9-9474-adb3d3b6a43f"
+                                    : photoDriver,
+                                width: 90,
+                                height: 90,
+                                fit: BoxFit.cover,
                               ),
-                              const SizedBox(width: 8),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            ),
+                            const SizedBox(width: 40),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .center, // Adjusted alignment
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  nameDriver,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 29,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  driverGender,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  carDetailsDriver,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        // A divider
+                        Container(
+                          height: 1,
+                          color: Colors
+                              .amber, // Changed color to amber for visibility
+                        ),
+                        const SizedBox(height: 20),
+                        // Phone icon to call the driver and chat icon to message driver
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                launchUrl(
+                                    Uri.parse("tel://$phoneNumberDriver"));
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    nameDriver,
-                                    style: GoogleFonts.roboto(
-                                        fontSize: 20, color: Colors.white),
-                                  ),
-                                  Text(
-                                    driverGender,
-                                    style: GoogleFonts.roboto(
-                                        fontSize: 13, color: Colors.white),
-                                  ),
-                                  Text(
-                                    carDetailsDriver,
-                                    style: GoogleFonts.roboto(
-                                        fontSize: 13, color: Colors.white),
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.call,
+                                      color: Colors.green,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 19),
+                            ),
+                            const SizedBox(width: 30),
+                            GestureDetector(
+                              onTap: () async {
+                                final phone =
+                                    "973$phoneNumberDriver"; // Concatenating Bahrain country code
+                                const message =
+                                    "Hello, I'm the one who requested for the ride ."; // Your pre-filled message
+                                final url =
+                                    "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
 
-                          // A divider
-                          const Divider(
-                              height: 1, color: Colors.amber, thickness: 1),
-
-                          const SizedBox(height: 19),
-
-                          // Phone icon to call the driver and chat icon to message driver
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  launchUrl(
-                                      Uri.parse("tel://$phoneNumberDriver"));
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(25)),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.white,
+                                if (await launchUrl(Uri.parse(url))) {
+                                  await canLaunchUrl(Uri.parse(url));
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("WhatsApp not installed"),
+                                        content: Text(
+                                          "Please install WhatsApp to chat with the driver.",
                                         ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.call,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 11),
-                                    Text(
-                                      "Call",
-                                      style: GoogleFonts.roboto(
-                                          color: Colors.green),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                  width: 20), // Add some spacing between icons
-                              GestureDetector(
-                                onTap: () async {
-                                  // Check if WhatsApp is installed on the device
-                                  bool whatsappInstalled = await canLaunchUrl(
-                                    "whatsapp://send?phone=$phoneNumberDriver"
-                                        as Uri,
-                                  );
-                                  if (whatsappInstalled) {
-                                    // If WhatsApp is installed, launch the WhatsApp chat
-                                    launchUrl(
-                                        "whatsapp://send?phone=$phoneNumberDriver"
-                                            as Uri);
-                                  } else {
-                                    // If WhatsApp is not installed, display a message to the user
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text("WhatsApp not installed"),
-                                          content: Text(
-                                            "Please install WhatsApp to chat with the driver.",
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("OK"),
                                           ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("OK"),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(25)),
-                                        border: Border.all(
-                                          width: 1,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.chat,
-                                        color: Colors.green,
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    const SizedBox(height: 11),
-                                    Text(
-                                      "Chat",
-                                      style: GoogleFonts.roboto(
-                                          color: Colors.green),
+                                    child: const Icon(
+                                      Icons.chat,
+                                      color: Colors.green,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          )
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           )),
     );
