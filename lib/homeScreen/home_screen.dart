@@ -25,6 +25,7 @@ import 'package:uober/models/direction_details.dart';
 import 'package:uober/models/online_nearby_drivers.dart';
 import 'package:uober/widgets/info_dialog.dart';
 import 'package:uober/widgets/loading_dialog.dart';
+import 'package:uober/widgets/payment_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -444,12 +445,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Map pickUpCoordinatesMap = {
       "latitude": pickUpLocation!.latitude.toString(),
-      "longitude": pickUpLocation!.longitude.toString(),
+      "longitude": pickUpLocation.longitude.toString(),
     };
 
     Map dropOfLocationCoordinateMap = {
       "latitude": dropOffLocation!.latitude.toString(),
-      "longitude": dropOffLocation!.longitude.toString(),
+      "longitude": dropOffLocation.longitude.toString(),
     };
 
     Map driverCoordinates = {
@@ -530,7 +531,7 @@ class _HomeScreenState extends State<HomeScreen> {
           updateFromDriverCurrentLocationToPickUp(currentLocationLatlng);
         } else if (status == "arrived") {
           setState(() {
-            tripStatusDisplay = "Driver is on ur location";
+            tripStatusDisplay = "Driver is on ur location - Get in!";
           });
         } else if (status == "ontrip") {
           updateFromDriverCurrentLocationToDropOffLocaion(
@@ -545,6 +546,26 @@ class _HomeScreenState extends State<HomeScreen> {
           markerSet.removeWhere(
               (element) => element.markerId.value.contains("driver"));
         });
+      }
+      if (status == "ended") {
+        if ((eventSnapshot.snapshot.value as Map)["fareAmount"] != null) {
+          double fareAmount = double.parse(
+              (eventSnapshot.snapshot.value as Map)["fareAmount"].toString());
+
+          var response = await showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  PaymentDialog(fareAmount: fareAmount.toString()));
+
+          if (response == "paid") {
+            tripRequestReference!.onDisconnect();
+            tripRequestReference = null;
+            tripstreamSubscription!.cancel();
+            tripstreamSubscription = null;
+            resetAppNow();
+            Restart.restartApp();
+          }
+        }
       }
     });
   }
@@ -574,7 +595,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       setState(() {
         tripStatusDisplay =
-            "the driver is on his way - ${directionDetailsPickUp.durationTextString}";
+            "The driver is on his way - ${directionDetailsPickUp.durationTextString}";
       });
       requestingDetailsInfo = false;
     }
@@ -1144,13 +1165,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              tripStatusDisplay,
-                              style: GoogleFonts.roboto(
+                            Expanded(
+                              child: Text(
+                                tripStatusDisplay,
+                                style: GoogleFonts.roboto(
                                   fontSize: 19,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
+                            // Other widgets in the Row
                           ],
                         ),
                         const SizedBox(height: 6),
@@ -1255,15 +1281,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 final url =
                                     "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
 
-                                if (await launchUrl(Uri.parse(url))) {
-                                  await canLaunchUrl(Uri.parse(url));
+                                if (await canLaunch(url)) {
+                                  await launch(url);
                                 } else {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text("WhatsApp not installed"),
-                                        content: Text(
+                                        title: const Text(
+                                            "WhatsApp not installed"),
+                                        content: const Text(
                                           "Please install WhatsApp to chat with the driver.",
                                         ),
                                         actions: [
@@ -1271,7 +1298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            child: Text("OK"),
+                                            child: const Text("OK"),
                                           ),
                                         ],
                                       );

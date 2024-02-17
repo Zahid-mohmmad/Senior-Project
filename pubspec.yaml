@@ -55,6 +55,7 @@ dependencies:
   flutter_geofire: ^2.0.3
   restart_app: ^1.2.1
   url_launcher: ^6.2.4
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
