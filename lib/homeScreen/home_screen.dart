@@ -870,7 +870,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               offset: Offset(0.7, 0.7)),
                         ]),
                     child: CircleAvatar(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.orange,
                       radius: 20,
                       child: Icon(
                         isDrawerOpened == true ? Icons.menu : Icons.close,
@@ -902,7 +902,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                          backgroundColor: Color.fromRGBO(26, 42, 65, 1.0),
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(24),
                         ),
@@ -915,7 +915,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                          backgroundColor: Color.fromRGBO(26, 42, 65, 1.0),
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(24),
                         ),
@@ -928,7 +928,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                          backgroundColor: Color.fromRGBO(26, 42, 65, 1.0),
                           shape: const CircleBorder(),
                           padding: const EdgeInsets.all(24),
                         ),
