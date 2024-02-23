@@ -25,45 +25,6 @@ class AuthenticationController extends GetxController {
   static AuthenticationController authController = Get.find();
   late Rx<User?> firebaseCurrentUser;
 
-  XFile? imageFile;
-
-  late Rx<File?> pickedFile;
-  File? get profileImage => pickedFile.value;
-  //pick image from gallery
-  pickImageFileFromGallery() async {
-    imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (imageFile != null) {
-      Get.snackbar("Profile Image", "you have successfullu picked your image.");
-    }
-    pickedFile = Rx<File?>(File(imageFile!.path));
-  }
-
-  //take a pic from the camera
-  captureImageFromPhoneCamera() async {
-    imageFile = await ImagePicker().pickImage(source: ImageSource.camera);
-
-    if (imageFile != null) {
-      Get.snackbar(
-          "Profile Image", "you have successfully captured your image.");
-    }
-    pickedFile = Rx<File?>(File(imageFile!.path));
-  }
-
-  Future<String> uploadImageToStorage(File imageFile) async {
-    // creating a folder inside the firbase storage as profile images and saving images of all people
-    Reference referenceStorage = FirebaseStorage.instance
-        .ref()
-        .child("Profile Images")
-        .child(FirebaseAuth.instance.currentUser!.uid);
-
-    UploadTask task = referenceStorage.putFile(imageFile);
-    TaskSnapshot snapshot = await task;
-
-    String downloadUrlOfImage = await snapshot.ref.getDownloadURL();
-    return downloadUrlOfImage;
-  }
-
 //check connectivity of the internet
   checkConnectivity(BuildContext context) async {
     var cr = await Connectivity().checkConnectivity();

@@ -20,6 +20,8 @@ import 'package:uober/controllers/manage_drivers.dart';
 import 'package:uober/controllers/push_notication.dart';
 import 'package:uober/global/global_variable.dart';
 import 'package:uober/global/trip_var.dart';
+import 'package:uober/homeScreen/rating_screen.dart';
+
 import 'package:uober/homeScreen/search_destination_screen.dart';
 import 'package:uober/models/direction_details.dart';
 import 'package:uober/models/online_nearby_drivers.dart';
@@ -59,6 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
   BitmapDescriptor? carIconNearbyDriver;
   DatabaseReference? tripRequestReference;
   List<OnlineNearbyDrivers>? availableNearbyDriversList;
+  List<OnlineNearbyDrivers> femaleDriversList = [];
+  List<OnlineNearbyDrivers> maleDriversList = [];
+
   StreamSubscription<DatabaseEvent>? tripstreamSubscription;
   bool requestingDetailsInfo = false;
 
@@ -558,12 +563,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   PaymentDialog(fareAmount: fareAmount.toString()));
 
           if (response == "paid") {
+           
+            
+            if ((eventSnapshot.snapshot.value as Map)["id"] != null) {
+              String driverId =
+                  (eventSnapshot.snapshot.value as Map)["id"].toString();
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (c) =>  RatingScreen(driverId: driverId,)));
+            }
             tripRequestReference!.onDisconnect();
             tripRequestReference = null;
             tripstreamSubscription!.cancel();
             tripstreamSubscription = null;
             resetAppNow();
-            Restart.restartApp();
+
           }
         }
       }

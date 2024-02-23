@@ -13,7 +13,7 @@ import 'package:uober/widgets/custom_text_field_widget.dart';
 import 'package:uober/widgets/loading_dialog.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -21,10 +21,7 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   bool showprogressBar = false;
-//instance of authentication_controller class for the image file methods
   var authenticationController = AuthenticationController.authController;
-
-  //personnel info
 
   TextEditingController userNametextEditingController = TextEditingController();
   TextEditingController emailtextEditingController = TextEditingController();
@@ -34,60 +31,309 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController majortextEditingController = TextEditingController();
   TextEditingController gendertextEditingController = TextEditingController();
   XFile? imageFile;
-
   String urlOfUploadedImage = "";
+  String selectedGender = "";
+  String selectedMajor = "Computer Science";
+  List<String> majors = [
+    "Computer Science",
+    "Electrical Engineering",
+    "Mechanical Engineering",
+    "Civil Engineering",
+    "Chemical Engineering",
+    "Other"
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                "Create an Account to Get Started",
+                style: GoogleFonts.roboto(
+                  fontSize: 24,
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () {
+                  chooseImageFromGallery();
+                },
+                child: CircleAvatar(
+                  radius: 70,
+                  backgroundImage: imageFile == null
+                      ? AssetImage("images/profile_avatar.jpg")
+                      : FileImage(File(imageFile!.path)) as ImageProvider,
+                  backgroundColor: Colors.orange,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              imageSelectionButtons(),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextFieldWidget(
+                editingController: userNametextEditingController,
+                labelText: "User Name",
+                iconData: Icons.person_2_outlined,
+                isObscure: false,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextFieldWidget(
+                editingController: emailtextEditingController,
+                labelText: "Email",
+                iconData: Icons.email_outlined,
+                isObscure: false,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextFieldWidget(
+                editingController: passwordtextEditingController,
+                labelText: "Password",
+                iconData: Icons.lock_open_outlined,
+                isObscure: true,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                controller: agetextEditingController,
+                decoration: InputDecoration(
+                  labelText: "Age",
+                  icon: Icon(Icons.numbers),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CustomTextFieldWidget(
+                editingController: phonetextEditingController,
+                labelText: "Phone",
+                iconData: Icons.phone,
+                isObscure: false,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedMajor,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedMajor = newValue!;
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: "Major",
+                  icon: Icon(Icons.book_online_outlined),
+                ),
+                items: majors.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Gender",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Radio<String>(
+                    value: 'male',
+                    groupValue: selectedGender,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedGender = value!;
+                      });
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Text('Male'),
+                  ),
+                  const SizedBox(width: 20),
+                  Radio<String>(
+                    value: 'female',
+                    groupValue: selectedGender,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedGender = value!;
+                      });
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Text('Female'),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  checkIfNetworkIsAvailable();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
+                child: Text(
+                  "Register",
+                  style: GoogleFonts.roboto(
+                    fontSize: 24,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account?  ",
+                    style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Text(
+                      "Login here",
+                      style: GoogleFonts.roboto(
+                        fontSize: 20,
+                        color: Colors.orange,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  showprogressBar == true
+                      ? const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.yellow),
+                        )
+                      : Container(),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Widget for image selection buttons
+  Widget imageSelectionButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+          onPressed: () async {
+            chooseImageFromGallery();
+          },
+          icon: const Icon(
+            Icons.image_outlined,
+            color: Colors.black,
+            size: 30,
+          ),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        IconButton(
+          onPressed: () async {
+            captureImageFromCamera();
+          },
+          icon: const Icon(
+            Icons.camera_alt_outlined,
+            color: Colors.black,
+            size: 30,
+          ),
+        ),
+      ],
+    );
+  }
 
   checkIfNetworkIsAvailable() {
     authenticationController.checkConnectivity(context);
 
-    if (imageFile != null) //image validation
-    {
+    if (imageFile != null) {
       signUpFormValidation();
     } else {
-      Get.snackbar("image not selected", "Please select the image first");
+      Get.snackbar("Image not selected", "Please select an image first");
     }
   }
 
   signUpFormValidation() {
     if (userNametextEditingController.text.trim().length < 3) {
       Get.snackbar(
-          "User name incorrect", "Please write your user name correctly");
+        "Username incorrect",
+        "Please enter your username correctly",
+      );
     } else if (phonetextEditingController.text.trim().length != 8) {
-      Get.snackbar("Number Incorrecr", "please write the number correctly");
-    } else if (!emailtextEditingController.text.contains("@stu.uoob.edu.bh")) {
+      Get.snackbar("Number incorrect", "Please enter a valid phone number");
+    } else if (!emailtextEditingController.text.contains("@stu.uob.edu.bh")) {
       Get.snackbar(
-          "email incorrect", "Please use your university email to continue");
+        "Email incorrect",
+        "Please use your university email to continue",
+      );
     } else if (passwordtextEditingController.text.trim().length < 8) {
       Get.snackbar(
-          "Password is weak", "Please write 8 or more digits to continue");
-    } else if (majortextEditingController.text.trim().isEmpty) {
-      Get.snackbar("major field empty", "Please fill out all the fields");
-    } else if (agetextEditingController.text.trim().isEmpty) {
-      Get.snackbar("vehicle color field is empty",
-          "Please write the color of your vehicle");
-    } else if (gendertextEditingController.text.isEmpty) {
-      Get.snackbar(
-          "gender field is empty", "Please write your gender of your vehicle");
+        "Password weak",
+        "Please enter a password with at least 8 characters",
+      );
     } else {
-      //uploadImageToStorage();
-      registerNewUser();
+      uploadImageToStorage();
     }
   }
 
   uploadImageToStorage() async {
     String imageIDName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference referenceImage =
-        FirebaseStorage.instance.ref().child("Images").child(imageIDName);
+    Reference referenceImage = FirebaseStorage.instance
+        .ref()
+        .child("Images_of_users")
+        .child(imageIDName);
 
-    // UploadTask uploadTask = referenceImage.putFile(File(imageFile!.path));
-    // TaskSnapshot snapshot = await uploadTask;
-    // urlOfUploadedImage = await snapshot.ref.getDownloadURL();
+    UploadTask uploadTask = referenceImage.putFile(File(imageFile!.path));
+    TaskSnapshot snapshot = await uploadTask;
+    urlOfUploadedImage = await snapshot.ref.getDownloadURL();
 
-    // setState(() {
-    //urlOfUploadedImage;
-    // });
+    setState(() {
+      urlOfUploadedImage;
+    });
 
-    //  registerNewUser();
+    registerNewUser();
   }
 
   registerNewUser() async {
@@ -106,7 +352,9 @@ class _SignupScreenState extends State<SignupScreen> {
             .catchError((errorMsg) {
       Navigator.pop(context);
       Get.snackbar(
-          "error", "an error occured while creating the account $errorMsg");
+        "Error",
+        "An error occurred while creating the account: $errorMsg",
+      );
     }))
         .user;
 
@@ -128,264 +376,42 @@ class _SignupScreenState extends State<SignupScreen> {
     };
     usersRef.set(usersDataMap);
     Get.snackbar(
-        "Registration Successful", "U have successffly register in UOBER! ");
+      "Registration Successful",
+      "You have successfully registered in UOBER!",
+    );
     Navigator.push(
-        context, MaterialPageRoute(builder: (c) => const LoginScreen()));
+      context,
+      MaterialPageRoute(builder: (c) => const LoginScreen()),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  "Create an Account To get started now",
-                  style: GoogleFonts.roboto(
-                      fontSize: 20,
-                      color: Colors.orange,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                // if image is not picked from camera or gallery it will show the avatar
-                authenticationController.imageFile == null
-                    ?
-                    //choose image circle avatar
-                    const CircleAvatar(
-                        radius: 70,
-                        backgroundImage:
-                            AssetImage("images/profile_avatar.jpg"),
-                        backgroundColor: Colors.orange,
-                      )
-                    : Container(
-                        // otherwise the image chosen by user in this container
-                        width: 180,
-                        height: 180,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black,
-                            image: DecorationImage(
-                                fit: BoxFit.fitHeight,
-                                image: FileImage(File(imageFile as String)))),
-                      ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () async {
-                        await authenticationController
-                            .pickImageFileFromGallery();
-                        setState(() {
-                          // Update the state after picking the image
-                          authenticationController.imageFile = imageFile;
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.image_outlined,
-                        color: Colors.black,
-                        size: 30,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                      onPressed: () async {
-                        await authenticationController
-                            .captureImageFromPhoneCamera();
-                        setState(() {
-                          // Update the state after capturing the image
-                          authenticationController.imageFile = imageFile;
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.camera_alt_outlined,
-                        color: Colors.black,
-                        size: 30,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                //personal info
-                //username
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  child: CustomTextFieldWidget(
-                    editingController: userNametextEditingController,
-                    labelText: "User Name",
-                    iconData: Icons.person_2_outlined,
-                    isObscure: false,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+  chooseImageFromGallery() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  child: CustomTextFieldWidget(
-                    editingController: emailtextEditingController,
-                    labelText: "Email",
-                    iconData: Icons.email_outlined,
-                    isObscure: false,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                //password
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  child: CustomTextFieldWidget(
-                    editingController: passwordtextEditingController,
-                    labelText: "Password",
-                    iconData: Icons.lock_open_outlined,
-                    isObscure: true,
-                  ),
-                ),
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = pickedFile;
+      });
+      Get.snackbar(
+        "Profile Image",
+        "You have successfully selected your image.",
+      );
+    }
+  }
 
-                const SizedBox(
-                  height: 10,
-                ),
-                //age
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  child: CustomTextFieldWidget(
-                    editingController: agetextEditingController,
-                    labelText: "age",
-                    iconData: Icons.numbers,
-                    isObscure: false,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
+  void captureImageFromCamera() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
-                //phone number
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  child: CustomTextFieldWidget(
-                    editingController: phonetextEditingController,
-                    labelText: "Phone",
-                    iconData: Icons.phone,
-                    isObscure: false,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                //city
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  child: CustomTextFieldWidget(
-                    editingController: majortextEditingController,
-                    labelText: "Major",
-                    iconData: Icons.book_online_outlined,
-                    isObscure: false,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                //country
-                SizedBox(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  child: CustomTextFieldWidget(
-                    editingController: gendertextEditingController,
-                    labelText: "Gender",
-                    iconData: Icons.people,
-                    isObscure: false,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-
-                const SizedBox(
-                  height: 10,
-                ),
-
-                Container(
-                  width: MediaQuery.of(context).size.width - 36,
-                  height: 55,
-                  decoration: const BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12),
-                      )),
-                  child: InkWell(
-                    onTap: () async {
-                      checkIfNetworkIsAvailable();
-                    },
-                    child: Center(
-                      child: Text(
-                        "Register",
-                        style: GoogleFonts.roboto(
-                            fontSize: 24,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already have an account?  ",
-                      style: GoogleFonts.roboto(
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Text(
-                        "Login here",
-                        style: GoogleFonts.roboto(
-                          fontSize: 20,
-                          color: Colors.orange,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    showprogressBar == true
-                        ? const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.yellow),
-                          )
-                        : Container(),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = pickedFile;
+      });
+      Get.snackbar(
+        "Captured Image",
+        "You have successfully captured an image.",
+      );
+    }
   }
 }

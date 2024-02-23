@@ -6,6 +6,8 @@ String profileImageUrl = "";
 
 String userPhone = "";
 String gender = "";
+double cRatingStars = 0.0;
+String titleRating = "";
 
 String userID = FirebaseAuth.instance.currentUser!.uid;
 String googleMapKey = "AIzaSyCE7a0H835hPtBcnv_MsApr9KDVHNY3U0U";

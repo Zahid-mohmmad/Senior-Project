@@ -47,15 +47,16 @@ dependencies:
   geolocator: ^10.1.0
   connectivity_plus: ^5.0.2
   google_fonts: ^6.1.0
-  http: ^1.2.0
-  provider: ^6.1.1
-  flutter_polyline_points_plus: ^3.0.0
-  loading_animation_widget: ^1.2.0+4
-  firebase_database: ^10.4.0
-  flutter_geofire: ^2.0.3
-  restart_app: ^1.2.1
-  url_launcher: ^6.2.4
-  qr_flutter: ^4.1.0
+  http: 
+  provider: 
+  flutter_polyline_points_plus:
+  loading_animation_widget:
+  firebase_database: 
+  flutter_geofire: 
+  restart_app: 
+  url_launcher: 
+  smooth_star_rating_nsafe: ^1.0.0+1
+  
 
 dev_dependencies:
   flutter_test:
