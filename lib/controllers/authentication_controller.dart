@@ -164,4 +164,8 @@ class AuthenticationController extends GetxController {
 
     ever(firebaseCurrentUser, checkIfUserIsLoggedIn);
   }
+
+  static getCurrentUser() {}
+
+  getUserGender() {}
 }

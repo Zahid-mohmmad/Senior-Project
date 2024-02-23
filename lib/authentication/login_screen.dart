@@ -32,9 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
   signInFormValidation() {
     if (!emailtextEditingController.text.contains("@stu.uob.edu.bh")) {
       Get.snackbar(
-          "email incorrect", "Please use ur university email to login");
+          "email incorrect", "Please use your university email to login");
     } else if (passwordtextEditingController.text.trim().length < 8) {
-      Get.snackbar("password incorrect", "Please use your valid password");
+      Get.snackbar("password incorrect", "Please use a valid password");
     } else {
       signInUser();
     }
@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) =>
-          const LoadingDialog(messageText: "please wait..."),
+          const LoadingDialog(messageText: "Please wait..."),
     );
 
     final User? userFirebase = (await FirebaseAuth.instance
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
     )
             .catchError((errorMsg) {
       Navigator.pop(context);
-      Get.snackbar("Login unsuccessful", "Error occured $errorMsg");
+      Get.snackbar("Login unsuccessful", "Error occurred: $errorMsg");
     }))
         .user;
 
@@ -72,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
             userName = (snap.snapshot.value as Map)["name"];
             userPhone = (snap.snapshot.value as Map)["phone"];
+            var userGender = (snap.snapshot.value as Map)["gender"];
             Navigator.push(
                 context, MaterialPageRoute(builder: (c) => const HomeScreen()));
           } else {
@@ -81,9 +82,33 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         } else {
           FirebaseAuth.instance.signOut();
-          Get.snackbar("not found", "your account is not found as a user");
+          Get.snackbar("Not found", "Your account was not found as a user");
         }
       });
+    }
+  }
+
+  forgotPassword() async {
+    if (emailtextEditingController.text.isNotEmpty) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) =>
+            const LoadingDialog(messageText: "Please wait..."),
+      );
+
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailtextEditingController.text)
+          .then((_) {
+        Navigator.pop(context);
+        Get.snackbar("Password Reset Email Sent",
+            "Please check your email to reset your password.");
+      }).catchError((errorMsg) {
+        Navigator.pop(context);
+        Get.snackbar("Password Reset Failed", "Error occurred: $errorMsg");
+      });
+    } else {
+      Get.snackbar("Email Required", "Please enter your email address");
     }
   }
 
@@ -214,6 +239,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     )
                   ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    forgotPassword();
+                  },
+                  child: Text(
+                    "Forgot Password?",
+                    style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      color: Colors.orange,
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
