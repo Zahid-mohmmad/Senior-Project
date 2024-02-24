@@ -51,11 +51,12 @@ dependencies:
   provider: 
   flutter_polyline_points_plus:
   loading_animation_widget:
-  firebase_database: 
+  firebase_database: ^10.4.6
   flutter_geofire: 
   restart_app: 
   url_launcher: 
   smooth_star_rating_nsafe: ^1.0.0+1
+  flutter_rating_bar: ^4.0.1
   
 
 dev_dependencies:

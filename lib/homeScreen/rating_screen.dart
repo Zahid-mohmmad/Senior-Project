@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,8 +9,34 @@ import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-class HomeScreen extends StatelessWidget {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Rating App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  double? rating;
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +46,21 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            showDialog(
+          onPressed: () async {
+            final result = await showDialog<double>(
               context: context,
               builder: (BuildContext context) => RatingScreen(driverId: '123'),
             );
+            if (result != null) {
+              setState(() {
+                rating = result;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Thank you for rating: $rating'),
+                ),
+              );
+            }
           },
           child: Text('Rate Driver'),
         ),
@@ -52,15 +90,15 @@ class _RatingScreenState extends State<RatingScreen> {
         .child(widget.driverId!)
         .child("ratings");
 
-    rateDriverRef.once().then((DatabaseEvent snapshot) {
-      if (!snapshot.snapshot.exists) {
-        rateDriverRef.set(cRatingStars.toString());
-      } else {
-        double oldRatings = double.parse(snapshot.snapshot.value.toString());
-        double avgRating = (oldRatings + cRatingStars) / 2;
-        rateDriverRef.set(avgRating.toString());
-      }
-    });
+    rateDriverRef.once().then((DataSnapshot snapshot) {
+          if (!snapshot.exists) {
+            rateDriverRef.set(cRatingStars.toString());
+          } else {
+            double oldRatings = double.parse(snapshot.value.toString());
+            double avgRating = (oldRatings + cRatingStars) / 2;
+            rateDriverRef.set(avgRating.toString());
+          }
+        } as FutureOr Function(DatabaseEvent value));
   }
 
   void _showThankYouDialog() {
@@ -92,6 +130,11 @@ class _RatingScreenState extends State<RatingScreen> {
       });
       _saveRating();
       _showThankYouDialog();
+
+      // Navigate back to HomeScreen after a delay of 2 seconds
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pop(context, cRatingStars);
+      });
     }
   }
 
@@ -135,73 +178,26 @@ class _RatingScreenState extends State<RatingScreen> {
                 starCount: 5,
                 rating: cRatingStars,
                 size: 46.0,
-                filledIconData: Icons.blur_off,
-                halfFilledIconData: Icons.blur_on,
-                color: Colors.amber,
-                borderColor: Colors.amber,
-                spacing: 0.0,
                 onRatingChanged: (value) {
                   setState(() {
                     cRatingStars = value;
-                    if (cRatingStars == 1) {
-                      titleRating = "Very Bad";
-                    } else if (cRatingStars == 2) {
-                      titleRating = "Bad";
-                    } else if (cRatingStars == 3) {
-                      titleRating = "Good";
-                    } else if (cRatingStars == 4) {
-                      titleRating = "Very Good";
-                    } else if (cRatingStars == 5) {
-                      titleRating = "Excellent";
-                    }
                   });
                 },
               ),
-              const SizedBox(height: 12.0),
-              Text(
-                titleRating,
-                style: GoogleFonts.poppins(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+              const SizedBox(height: 22.0),
+              const Divider(
+                height: 4.0,
+                thickness: 4.0,
               ),
-              const SizedBox(height: 18.0),
+              const SizedBox(height: 22.0),
               ElevatedButton(
-                  onPressed: () {
-                    DatabaseReference rateDriverR = FirebaseDatabase.instance
-                        .ref()
-                        .child("drivers")
-                        .child(widget.driverId!)
-                        .child("ratings");
-
-                    rateDriverR.once().then((snap) {
-                      //if it is the drivers first trip then add the rating directly
-                      if (snap.snapshot.value == null) {
-                        rateDriverR.set(cRatingStars.toString());
-                        SystemNavigator.pop();
-                        Restart.restartApp();
-                      } else {
-                        double oldRatings =
-                            double.parse(snap.snapshot.value.toString());
-
-                        double avgRating = (oldRatings + cRatingStars) / 2;
-                        rateDriverR.set(avgRating.toString());
-                        SystemNavigator.pop();
-                        Restart.restartApp();
-                      }
-                    });
-                  },
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-                  child: Text(
-                    "Rate",
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ))
+                onPressed: _rateDriver,
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.amber,
+                ),
+                child: const Text('Rate'),
+              ),
+              const SizedBox(height: 22.0),
             ],
           ),
         ),
