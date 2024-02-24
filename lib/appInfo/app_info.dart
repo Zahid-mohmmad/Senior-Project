@@ -14,4 +14,9 @@ class AppInfo extends ChangeNotifier {
     dropoffLocation = dropOff;
     notifyListeners();
   }
+
+  String driverAvgR = "0";
+  updateDriverAverageRatings(String ratings) {
+    driverAvgR = ratings;
+  }
 }
