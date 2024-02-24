@@ -563,9 +563,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   PaymentDialog(fareAmount: fareAmount.toString()));
 
           if (response == "Paid") {
-            if ((eventSnapshot.snapshot.value as Map)["id"] != null) {
+            if ((eventSnapshot.snapshot.value as Map)["driverID"] != null) {
               String driverId =
-                  (eventSnapshot.snapshot.value as Map)["id"].toString();
+                  (eventSnapshot.snapshot.value as Map)["driverID"].toString();
               Navigator.push(
                   context,
                   MaterialPageRoute(
