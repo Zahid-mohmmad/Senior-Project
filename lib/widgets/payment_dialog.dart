@@ -75,7 +75,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Navigator.pop(context, 'Paid');
+                Navigator.pop(context, "Paid");
                 final url =
                     'benefitpay://'; // Replace with the actual URL scheme for Benefit Pay
                 if (await canLaunch(url)) {

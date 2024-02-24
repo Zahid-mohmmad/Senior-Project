@@ -65,7 +65,7 @@ class _RatingScreenState extends State<RatingScreen> {
                 filledIconData: Icons.blur_off,
                 halfFilledIconData: Icons.blur_on,
                 color: Colors.amber,
-                borderColor: Colors.black,
+                borderColor: Colors.amber,
                 spacing: 0.0,
                 onRatingChanged: (value) {
                   cRatingStars = value;
@@ -114,40 +114,44 @@ class _RatingScreenState extends State<RatingScreen> {
                 height: 18.0,
               ),
               ElevatedButton(
-                  onPressed: () {
-                    DatabaseReference rateDriverR = FirebaseDatabase.instance
-                        .ref()
-                        .child("drivers")
-                        .child(widget.driverId!)
-                        .child("ratings");
+                onPressed: () {
+                  DatabaseReference rateDriverR = FirebaseDatabase.instance
+                      .ref()
+                      .child("drivers")
+                      .child(widget.driverId!)
+                      .child("ratings");
 
-                    rateDriverR.once().then((snap) {
-                      //if it is the drivers first trip then add the rating directly
-                      if (snap.snapshot.value == null) {
-                        rateDriverR.set(cRatingStars.toString());
-                        SystemNavigator.pop();
-                        Restart.restartApp();
-                      } else {
-                        double oldRatings =
-                            double.parse(snap.snapshot.value.toString());
+                  rateDriverR.once().then((snap) {
+                    //if it is the drivers first trip then add the rating directly
+                    if (snap.snapshot.value == null) {
+                      rateDriverR.set(cRatingStars.toString());
+                      SystemNavigator.pop();
+                      Restart.restartApp();
+                    } else {
+                      double oldRatings =
+                          double.parse(snap.snapshot.value.toString());
 
-                        double avgRating = (oldRatings + cRatingStars) / 2;
-                        rateDriverR.set(avgRating.toString());
-                        SystemNavigator.pop();
-                        Restart.restartApp();
-                      }
-                    });
-                  },
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-                  child: Text(
-                    "Rate",
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ))
+                      double avgRating = (oldRatings + cRatingStars) / 2;
+                      rateDriverR.set(avgRating.toString());
+                      Navigator.pop(context); // Close the rating dialog
+                    }
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber,
+                    padding: const EdgeInsets.symmetric(horizontal: 60)),
+                child: Text(
+                  "Rate",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 12.0,
+              ),
             ],
           ),
         ),

@@ -562,21 +562,22 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (BuildContext context) =>
                   PaymentDialog(fareAmount: fareAmount.toString()));
 
-          if (response == "paid") {
-           
-            
+          if (response == "Paid") {
             if ((eventSnapshot.snapshot.value as Map)["id"] != null) {
               String driverId =
                   (eventSnapshot.snapshot.value as Map)["id"].toString();
               Navigator.push(
-                  context, MaterialPageRoute(builder: (c) =>  RatingScreen(driverId: driverId,)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => RatingScreen(
+                            driverId: driverId,
+                          )));
             }
             tripRequestReference!.onDisconnect();
             tripRequestReference = null;
             tripstreamSubscription!.cancel();
             tripstreamSubscription = null;
             resetAppNow();
-
           }
         }
       }
