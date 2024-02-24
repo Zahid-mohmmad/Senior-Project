@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uober/homeScreen/rating_screen.dart';
 
 class PaymentDialog extends StatefulWidget {
   final String fareAmount;
@@ -12,6 +13,24 @@ class PaymentDialog extends StatefulWidget {
 }
 
 class _PaymentDialogState extends State<PaymentDialog> {
+  void _navigateToRatingScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RatingScreen()),
+    );
+  }
+
+  void _performPaymentAndNavigate() async {
+    // Perform payment logic here
+    // ...
+
+    await Future.delayed(Duration(seconds: 2)); // Add a delay of 2 seconds
+
+    Navigator.pop(context, 'Paid');
+
+    _navigateToRatingScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -65,7 +84,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, "Paid"); // Close the container
+                _performPaymentAndNavigate();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               child: const Text("Pay Cash"),
@@ -80,6 +99,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                     'benefitpay://'; // Replace with the actual URL scheme for Benefit Pay
                 if (await canLaunch(url)) {
                   await launch(url);
+                  _performPaymentAndNavigate();
                 } else {
                   showDialog(
                     context: context,
@@ -116,7 +136,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
             ),
             ElevatedButton(
               onPressed: () {
-                // Add your logic for Pay with Card
+                _performPaymentAndNavigate();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text("Pay with Card"),
