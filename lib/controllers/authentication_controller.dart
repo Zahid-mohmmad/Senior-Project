@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:uober/appInfo/app_info.dart';
 import 'package:uober/authentication/login_screen.dart';
 import 'package:uober/global/global_variable.dart';
+import 'package:uober/homeScreen/dashboard.dart';
 import 'package:uober/homeScreen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -43,7 +44,7 @@ class AuthenticationController extends GetxController {
     {
       Get.to(const LoginScreen());
     } else {
-      Get.to(const HomeScreen());
+      Get.to(const Dashboard());
     }
   }
 

@@ -29,6 +29,7 @@ import 'package:uober/widgets/info_dialog.dart';
 import 'package:uober/widgets/loading_dialog.dart';
 import 'package:uober/widgets/payment_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uober/homeScreen/dashboard.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -741,615 +742,645 @@ class _HomeScreenState extends State<HomeScreen> {
     makeDriverNearbyCarIcone();
     return SafeArea(
       child: Scaffold(
-          key: skey,
-          drawer: Container(
-            width: 255,
-            color: Colors.white,
-            child: Drawer(
-              backgroundColor: Colors.white,
-              child: ListView(
-                children: [
-                  //header
-                  Container(
-                    color: Colors.blue,
-                    height: 160,
-                    child: DrawerHeader(
-                      decoration: const BoxDecoration(color: Colors.blue),
-                      child: Row(
+        key: skey,
+        drawer: Container(
+          width: 255,
+          color: Colors.white,
+          child: Drawer(
+            backgroundColor: Colors.white,
+            child: ListView(
+              children: [
+                //header
+                Container(
+                  color: Colors.blue,
+                  height: 160,
+                  child: DrawerHeader(
+                    decoration: const BoxDecoration(color: Colors.blue),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.person,
+                          size: 60,
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              userName,
+                              style: GoogleFonts.roboto(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              "Profile",
+                              style: GoogleFonts.roboto(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const Divider(
+                  height: 1,
+                  color: Colors.white,
+                  thickness: 1,
+                ),
+
+                const SizedBox(
+                  height: 10,
+                ),
+
+                //body
+
+                ListTile(
+                  leading: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.info,
+                      color: Colors.black,
+                    ),
+                  ),
+                  title: Text(
+                    "About",
+                    style: GoogleFonts.roboto(color: Colors.black),
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    Get.to(const LoginScreen());
+                  },
+                  child: ListTile(
+                    leading: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.black,
+                      ),
+                    ),
+                    title: Text(
+                      "Logout",
+                      style: GoogleFonts.roboto(color: Colors.grey),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+            //googleMapAPI
+            GoogleMap(
+              padding: EdgeInsets.only(top: 26, bottom: bottomMapPadding),
+              mapType: MapType.normal,
+              myLocationButtonEnabled: true,
+              polylines: polylineset,
+              markers: markerSet,
+              circles: circleSet,
+              initialCameraPosition: googlePlexInitialPosition,
+              onMapCreated: (GoogleMapController mapController) {
+                controllerGoogleMap = mapController;
+                googleMapCompleterController.complete(controllerGoogleMap);
+
+                getCurrentLiveLocationOfUser();
+                setState(() {
+                  bottomMapPadding = 300;
+                });
+              },
+            ),
+
+            //drawer button to turn it on and off
+            Positioned(
+              top: 42,
+              left: 19,
+              child: GestureDetector(
+                onTap: () {
+                  if (isDrawerOpened == true) {
+                    skey.currentState!
+                        .openDrawer(); // user will open the drawer
+                  } else {
+                    resetAppNow();
+                  }
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 5,
+                            spreadRadius: 0.5,
+                            offset: Offset(0.7, 0.7)),
+                      ]),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.orange,
+                    radius: 20,
+                    child: Icon(
+                      isDrawerOpened == true ? Icons.menu : Icons.close,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 120,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 130,
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.amber),
+                    color: Colors.amber.withOpacity(0.3),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          var responseFromSearchPage = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (c) => const SearchDestinationScreen(),
+                            ),
+                          );
+                          if (responseFromSearchPage == "p") {
+                            displayUserRideDetailsContainer();
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 50, // Adjust the height as needed
+                          margin: EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.amber),
+                            color: Colors.white,
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(6),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.search,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      "Where would you go?",
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          var responseFromSearchPage = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (c) => const SearchDestinationScreen(),
+                            ),
+                          );
+                          if (responseFromSearchPage == "p") {
+                            displayUserRideDetailsContainer();
+                          }
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          height: 40, // Adjust the height as needed
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.amber,
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Ride Now",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            //ride details container
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: rideDetailsContainerHeight,
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 15.0,
+                        spreadRadius: 0.5,
+                        offset: Offset(0.7, 0.7)),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 18,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0, right: 16),
+                        child: SizedBox(
+                          height: 190,
+                          child: Card(
+                            elevation: 18,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * .70,
+                              color: Colors.black,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, bottom: 8),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8, right: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            (directionDetailsInstance != null)
+                                                ? directionDetailsInstance!
+                                                    .distanceTextString!
+                                                : "",
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 16,
+                                                color: Colors.white70,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            (directionDetailsInstance != null)
+                                                ? directionDetailsInstance!
+                                                    .durationTextString!
+                                                : "",
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 16,
+                                                color: Colors.white70,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            stateOfApp = "requesting";
+                                          });
+
+                                          displayRequestContainer();
+
+                                          //get nearest available drivers
+
+                                          //assign the list of online drivers to this list
+                                          availableNearbyDriversList =
+                                              ManageDriversMethods
+                                                  .withinRadiusOnlineDriversList;
+
+                                          //search driver until the request is accepted
+                                          searchDriver();
+                                        },
+                                        child: Image.asset(
+                                          "images/car-rental.png",
+                                          height: 100,
+                                          width: 100,
+                                          color: Colors.orange,
+                                        )),
+                                    Text(
+                                      (directionDetailsInstance != null)
+                                          ? "BHD ${(authenticationController.calculateFareAmount(directionDetailsInstance!)).toStringAsFixed(1)}"
+                                          : "",
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 18,
+                                        color: Colors.white70,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            //request container
+
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: requestContainerHeight,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 0.0,
+                        spreadRadius: 0.5,
+                        offset: Offset(0.7, 0.7),
+                      )
+                    ]),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: LoadingAnimationWidget.flickr(
+                            leftDotColor: Colors.orange,
+                            rightDotColor: Colors.white,
+                            size: 60),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          resetAppNow();
+                          cancelRideRequest();
+                        },
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(25),
+                            border: Border.all(width: 1, color: Colors.orange),
+                          ),
+                          child: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            //trip details container
+            // Positioned widget containing the trip details container
+
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                height: tripContainerHeight,
+                decoration: const BoxDecoration(
+                  color: Colors.black, // Added background color for visibility
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 0.5, // Adjusted blur radius for shadow
+                      spreadRadius: 0.5,
+                      offset: Offset(0.0, 0.0),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 5),
+                      // Display the details of the trip
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.person,
-                            size: 60,
+                          Expanded(
+                            child: Text(
+                              tripStatusDisplay,
+                              style: GoogleFonts.roboto(
+                                fontSize: 19,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          const SizedBox(
-                            width: 16,
+                          // Other widgets in the Row
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      // A divider
+                      Container(
+                        height: 1,
+                        color: Colors
+                            .amber, // Changed color to amber for visibility
+                      ),
+                      const SizedBox(height: 19),
+                      // Display the image of the driver photo, name, gender, and car details
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ClipOval(
+                            child: Image.network(
+                              photoDriver == ''
+                                  ? "https://firebasestorage.googleapis.com/v0/b/uober-1ea68.appspot.com/o/driveral.png?alt=media&token=29671c17-00d8-4bf9-9474-adb3d3b6a43f"
+                                  : photoDriver,
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                          const SizedBox(width: 40),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment:
+                                MainAxisAlignment.center, // Adjusted alignment
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                userName,
+                                nameDriver,
                                 style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  color: Colors.black,
+                                    fontSize: 29,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                driverGender,
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.white,
                                 ),
                               ),
                               Text(
-                                "Profile",
+                                carDetailsDriver,
                                 style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  color: Colors.black,
+                                  fontSize: 16,
+                                  color: Colors.white,
                                 ),
                               ),
                             ],
                           ),
                         ],
                       ),
-                    ),
-                  ),
-
-                  const Divider(
-                    height: 1,
-                    color: Colors.white,
-                    thickness: 1,
-                  ),
-
-                  const SizedBox(
-                    height: 10,
-                  ),
-
-                  //body
-
-                  ListTile(
-                    leading: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.info,
-                        color: Colors.black,
+                      const SizedBox(height: 20),
+                      // A divider
+                      Container(
+                        height: 1,
+                        color: Colors
+                            .amber, // Changed color to amber for visibility
                       ),
-                    ),
-                    title: Text(
-                      "About",
-                      style: GoogleFonts.roboto(color: Colors.black),
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: () {
-                      FirebaseAuth.instance.signOut();
-                      Get.to(const LoginScreen());
-                    },
-                    child: ListTile(
-                      leading: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.logout,
-                          color: Colors.black,
-                        ),
-                      ),
-                      title: Text(
-                        "Logout",
-                        style: GoogleFonts.roboto(color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          body: Stack(
-            children: [
-              //googleMapAPI
-              GoogleMap(
-                padding: EdgeInsets.only(top: 26, bottom: bottomMapPadding),
-                mapType: MapType.normal,
-                myLocationButtonEnabled: true,
-                polylines: polylineset,
-                markers: markerSet,
-                circles: circleSet,
-                initialCameraPosition: googlePlexInitialPosition,
-                onMapCreated: (GoogleMapController mapController) {
-                  controllerGoogleMap = mapController;
-                  googleMapCompleterController.complete(controllerGoogleMap);
-
-                  getCurrentLiveLocationOfUser();
-                  setState(() {
-                    bottomMapPadding = 300;
-                  });
-                },
-              ),
-
-              //drawer button to turn it on and off
-              Positioned(
-                top: 42,
-                left: 19,
-                child: GestureDetector(
-                  onTap: () {
-                    if (isDrawerOpened == true) {
-                      skey.currentState!
-                          .openDrawer(); // user will open the drawer
-                    } else {
-                      resetAppNow();
-                    }
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 5,
-                              spreadRadius: 0.5,
-                              offset: Offset(0.7, 0.7)),
-                        ]),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.orange,
-                      radius: 20,
-                      child: Icon(
-                        isDrawerOpened == true ? Icons.menu : Icons.close,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              //Search Location Icon Button
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: -80,
-                child: SizedBox(
-                  height: searchContainerHeight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          var responseFromSearchPage = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (c) =>
-                                      const SearchDestinationScreen()));
-                          if (responseFromSearchPage == "p") {
-                            displayUserRideDetailsContainer();
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(26, 42, 65, 1.0),
-                          shape: const CircleBorder(),
-                          padding: const EdgeInsets.all(24),
-                        ),
-                        child: const Icon(
-                          Icons.search,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(26, 42, 65, 1.0),
-                          shape: const CircleBorder(),
-                          padding: const EdgeInsets.all(24),
-                        ),
-                        child: const Icon(
-                          Icons.home,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(26, 42, 65, 1.0),
-                          shape: const CircleBorder(),
-                          padding: const EdgeInsets.all(24),
-                        ),
-                        child: const Icon(
-                          Icons.work,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              //ride details container
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: rideDetailsContainerHeight,
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 15.0,
-                          spreadRadius: 0.5,
-                          offset: Offset(0.7, 0.7)),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0, right: 16),
-                          child: SizedBox(
-                            height: 190,
-                            child: Card(
-                              elevation: 18,
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * .70,
-                                color: Colors.black,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8.0, bottom: 8),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8, right: 8),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              (directionDetailsInstance != null)
-                                                  ? directionDetailsInstance!
-                                                      .distanceTextString!
-                                                  : "",
-                                              style: GoogleFonts.montserrat(
-                                                  fontSize: 16,
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              (directionDetailsInstance != null)
-                                                  ? directionDetailsInstance!
-                                                      .durationTextString!
-                                                  : "",
-                                              style: GoogleFonts.montserrat(
-                                                  fontSize: 16,
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              stateOfApp = "requesting";
-                                            });
-
-                                            displayRequestContainer();
-
-                                            //get nearest available drivers
-
-                                            //assign the list of online drivers to this list
-                                            availableNearbyDriversList =
-                                                ManageDriversMethods
-                                                    .withinRadiusOnlineDriversList;
-
-                                            //search driver until the request is accepted
-                                            searchDriver();
-                                          },
-                                          child: Image.asset(
-                                            "images/car-rental.png",
-                                            height: 100,
-                                            width: 100,
-                                            color: Colors.orange,
-                                          )),
-                                      Text(
-                                        (directionDetailsInstance != null)
-                                            ? "BHD ${(authenticationController.calculateFareAmount(directionDetailsInstance!)).toStringAsFixed(1)}"
-                                            : "",
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 18,
-                                          color: Colors.white70,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              //request container
-
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: requestContainerHeight,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 0.0,
-                          spreadRadius: 0.5,
-                          offset: Offset(0.7, 0.7),
-                        )
-                      ]),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          height: 12,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: LoadingAnimationWidget.flickr(
-                              leftDotColor: Colors.orange,
-                              rightDotColor: Colors.white,
-                              size: 60),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            resetAppNow();
-                            cancelRideRequest();
-                          },
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(25),
-                              border:
-                                  Border.all(width: 1, color: Colors.orange),
-                            ),
-                            child: const Icon(
-                              Icons.close,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              //trip details container
-              // Positioned widget containing the trip details container
-
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  height: tripContainerHeight,
-                  decoration: const BoxDecoration(
-                    color:
-                        Colors.black, // Added background color for visibility
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 0.5, // Adjusted blur radius for shadow
-                        spreadRadius: 0.5,
-                        offset: Offset(0.0, 0.0),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 5),
-                        // Display the details of the trip
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                tripStatusDisplay,
-                                style: GoogleFonts.roboto(
-                                  fontSize: 19,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            // Other widgets in the Row
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        // A divider
-                        Container(
-                          height: 1,
-                          color: Colors
-                              .amber, // Changed color to amber for visibility
-                        ),
-                        const SizedBox(height: 19),
-                        // Display the image of the driver photo, name, gender, and car details
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ClipOval(
-                              child: Image.network(
-                                photoDriver == ''
-                                    ? "https://firebasestorage.googleapis.com/v0/b/uober-1ea68.appspot.com/o/driveral.png?alt=media&token=29671c17-00d8-4bf9-9474-adb3d3b6a43f"
-                                    : photoDriver,
-                                width: 90,
-                                height: 90,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(width: 40),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .center, // Adjusted alignment
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 20),
+                      // Phone icon to call the driver and chat icon to message driver
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              launchUrl(Uri.parse("tel://$phoneNumberDriver"));
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  nameDriver,
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 29,
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                      width: 1,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  driverGender,
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 16,
-                                    color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  carDetailsDriver,
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 16,
-                                    color: Colors.white,
+                                  child: const Icon(
+                                    Icons.call,
+                                    color: Colors.green,
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        // A divider
-                        Container(
-                          height: 1,
-                          color: Colors
-                              .amber, // Changed color to amber for visibility
-                        ),
-                        const SizedBox(height: 20),
-                        // Phone icon to call the driver and chat icon to message driver
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                launchUrl(
-                                    Uri.parse("tel://$phoneNumberDriver"));
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    child: const Icon(
-                                      Icons.call,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 30),
-                            GestureDetector(
-                              onTap: () async {
-                                final phone =
-                                    "973$phoneNumberDriver"; // Concatenating Bahrain country code
-                                const message =
-                                    "Hello, I'm the one who requested for the ride ."; //  pre-filled message
-                                final url =
-                                    "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
+                          ),
+                          const SizedBox(width: 30),
+                          GestureDetector(
+                            onTap: () async {
+                              final phone =
+                                  "973$phoneNumberDriver"; // Concatenating Bahrain country code
+                              const message =
+                                  "Hello, I'm the one who requested for the ride ."; //  pre-filled message
+                              final url =
+                                  "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
 
-                                if (await canLaunch(url)) {
-                                  await launch(url);
-                                } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                            "WhatsApp not installed"),
-                                        content: const Text(
-                                          "Please install WhatsApp to chat with the driver.",
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text("OK"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.white,
+                              if (await canLaunch(url)) {
+                                await launch(url);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title:
+                                          const Text("WhatsApp not installed"),
+                                      content: const Text(
+                                        "Please install WhatsApp to chat with the driver.",
                                       ),
-                                    ),
-                                    child: const Icon(
-                                      Icons.chat,
-                                      color: Colors.green,
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                ],
-                              ),
+                                  child: const Icon(
+                                    Icons.chat,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
