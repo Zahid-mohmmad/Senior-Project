@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uober/homeScreen/home_screen.dart';
+import 'package:uober/homeScreen/profile_screen.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -40,47 +41,32 @@ class _DashboardState extends State<Dashboard> {
         children: const [
           HomeScreen(),
           // EarningsScreen(),
-          // ProfileScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
+            icon: const Icon(
               Icons.home,
-              color: selectedIndex == 0 ? Colors.amber : Colors.black,
+              color: Colors.black,
             ),
             label: "Home",
           ),
           BottomNavigationBarItem(
             icon: Hexagon(
-              child: Stack(
-                children: [
-                  const Icon(
-                    Icons.wallet,
-                    color: Colors.black,
-                    size: 50,
-                  ),
-                  Positioned(
-                    top: -20,
-                    left: 3,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ],
+              child: const Icon(
+                Icons.wallet,
+                color: Colors.black,
+                size: 50,
               ),
             ),
             label: "Wallet",
           ),
           BottomNavigationBarItem(
-            icon: Icon(
+            icon: const Icon(
               Icons.person,
-              color: selectedIndex == 2 ? Colors.orange : Colors.black,
+              color: Colors.black,
             ),
             label: "Profile",
           ),
@@ -116,7 +102,7 @@ class Hexagon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 90,
-      height: 116,
+      height: 100,
       child: CustomPaint(
         painter: _HexagonPainter(),
         child: Center(child: child),

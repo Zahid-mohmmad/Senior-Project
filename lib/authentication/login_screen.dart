@@ -9,6 +9,7 @@ import 'package:uober/global/global_variable.dart';
 import 'package:uober/homeScreen/home_screen.dart';
 import 'package:uober/widgets/custom_text_field_widget.dart';
 import 'package:uober/widgets/loading_dialog.dart';
+import 'package:uober/homeScreen/dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -74,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
             userPhone = (snap.snapshot.value as Map)["phone"];
             var userGender = (snap.snapshot.value as Map)["gender"];
             Navigator.push(
-                context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+                context, MaterialPageRoute(builder: (c) => Dashboard()));
           } else {
             FirebaseAuth.instance.signOut();
             Get.snackbar("Your account is blocked",

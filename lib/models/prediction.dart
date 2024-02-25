@@ -10,4 +10,6 @@ class Prediction {
     mainText = json["structured_formatting"]["main_text"];
     secondaryText = json["structured_formatting"]["secondary_text"];
   }
+
+  get description => null;
 }

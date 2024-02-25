@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 String userName = "";
 String profileImageUrl = "";
-
+String userimage = " ";
 String userPhone = "";
 String gender = "";
 double cRatingStars = 0.0;

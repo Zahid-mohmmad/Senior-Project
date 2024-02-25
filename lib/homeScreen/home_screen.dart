@@ -30,6 +30,7 @@ import 'package:uober/widgets/loading_dialog.dart';
 import 'package:uober/widgets/payment_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uober/homeScreen/dashboard.dart';
+import 'package:uober/homeScreen/notification.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -874,27 +875,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 5,
-                            spreadRadius: 0.5,
-                            offset: Offset(0.7, 0.7)),
-                      ]),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.orange,
-                    radius: 20,
-                    child: Icon(
-                      isDrawerOpened == true ? Icons.menu : Icons.close,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 5,
+                              spreadRadius: 0.5,
+                              offset: Offset(0.7, 0.7)),
+                        ]),
+                    child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: const Icon(Icons.menu, color: Colors.black87))),
               ),
             ),
+            Positioned(
+                top: 42,
+                right: 19,
+                child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: IconButton(
+                        icon: const Icon(Icons.notifications,
+                            color: Colors.black87),
+                        onPressed: () {
+                          // handle notification tap
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (c) => NotificationsPage()));
+                        }))),
             Positioned(
               left: 0,
               right: 0,
