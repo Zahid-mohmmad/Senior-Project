@@ -58,7 +58,7 @@ class _DashboardState extends State<Dashboard> {
               child: const Icon(
                 Icons.wallet,
                 color: Colors.black,
-                size: 50,
+                size: 31,
               ),
             ),
             label: "Wallet",
@@ -101,8 +101,8 @@ class Hexagon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 90,
-      height: 100,
+      width: 66,
+      height: 80,
       child: CustomPaint(
         painter: _HexagonPainter(),
         child: Center(child: child),
