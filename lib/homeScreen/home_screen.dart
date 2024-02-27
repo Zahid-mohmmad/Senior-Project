@@ -31,6 +31,7 @@ import 'package:uober/widgets/payment_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uober/homeScreen/dashboard.dart';
 import 'package:uober/homeScreen/notification.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -1016,17 +1017,17 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: rideDetailsContainerHeight,
                 decoration: const BoxDecoration(
-                  color: Colors.black,
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 15.0,
+                        color: Colors.white,
+                        blurRadius: 1.0,
                         spreadRadius: 0.5,
-                        offset: Offset(0.7, 0.7)),
+                        offset: Offset(2, 2)),
                   ],
                 ),
                 child: Padding(
@@ -1039,12 +1040,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, right: 16),
                         child: SizedBox(
-                          height: 190,
+                          height: 260,
                           child: Card(
                             elevation: 18,
                             child: Container(
-                              width: MediaQuery.of(context).size.width * .70,
-                              color: Colors.black,
+                              width: MediaQuery.of(context).size.width * .90,
+                              color: Colors.white,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.only(top: 8.0, bottom: 8),
@@ -1065,7 +1066,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 : "",
                                             style: GoogleFonts.montserrat(
                                                 fontSize: 16,
-                                                color: Colors.white70,
+                                                color: Colors.orange,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
@@ -1075,7 +1076,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 : "",
                                             style: GoogleFonts.montserrat(
                                                 fontSize: 16,
-                                                color: Colors.white70,
+                                                color: Colors.orange,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ],
@@ -1103,7 +1104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           "images/car-rental.png",
                                           height: 100,
                                           width: 100,
-                                          color: Colors.amber,
+                                          color: Colors.orange,
                                         )),
                                     Text(
                                       (directionDetailsInstance != null)
@@ -1111,7 +1112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           : "",
                                       style: GoogleFonts.montserrat(
                                         fontSize: 18,
-                                        color: Colors.white70,
+                                        color: Colors.orange,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -1142,7 +1143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         topRight: Radius.circular(16)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black,
+                        color: Colors.white,
                         blurRadius: 0.0,
                         spreadRadius: 0.5,
                         offset: Offset(0.7, 0.7),
@@ -1161,7 +1162,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 200,
                         child: LoadingAnimationWidget.flickr(
                             leftDotColor: Colors.amber,
-                            rightDotColor: Colors.white,
+                            rightDotColor:
+                                const Color.fromARGB(255, 3, 62, 111),
                             size: 60),
                       ),
                       const SizedBox(
@@ -1176,13 +1178,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 50,
                           width: 50,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(25),
-                            border: Border.all(width: 1, color: Colors.amber),
+                            border: Border.all(width: 1, color: Colors.orange),
                           ),
                           child: const Icon(
                             Icons.close,
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 2, 64, 114),
                             size: 30,
                           ),
                         ),
@@ -1203,14 +1205,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: tripContainerHeight,
                 decoration: const BoxDecoration(
-                  color: Colors.black, // Added background color for visibility
+                  color: Colors.white, // Added background color for visibility
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black,
+                      color: Colors.white,
                       blurRadius: 0.5, // Adjusted blur radius for shadow
                       spreadRadius: 0.5,
                       offset: Offset(0.0, 0.0),
@@ -1233,7 +1235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               tripStatusDisplay,
                               style: GoogleFonts.roboto(
                                 fontSize: 19,
-                                color: Colors.white,
+                                color: const Color.fromARGB(255, 2, 68, 122),
                                 fontWeight: FontWeight.bold,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -1327,7 +1329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: const Icon(
                                     Icons.call,
-                                    color: Colors.green,
+                                    color: Colors.orange,
                                   ),
                                 ),
                               ],
@@ -1382,8 +1384,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   child: const Icon(
-                                    Icons.chat,
-                                    color: Colors.green,
+                                    FontAwesomeIcons.whatsapp,
+                                    color: Colors.orange,
                                   ),
                                 ),
                               ],
