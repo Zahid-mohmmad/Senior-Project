@@ -1103,7 +1103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           "images/car-rental.png",
                                           height: 100,
                                           width: 100,
-                                          color: Colors.orange,
+                                          color: Colors.amber,
                                         )),
                                     Text(
                                       (directionDetailsInstance != null)
@@ -1160,7 +1160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         width: 200,
                         child: LoadingAnimationWidget.flickr(
-                            leftDotColor: Colors.orange,
+                            leftDotColor: Colors.amber,
                             rightDotColor: Colors.white,
                             size: 60),
                       ),
@@ -1178,7 +1178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(25),
-                            border: Border.all(width: 1, color: Colors.orange),
+                            border: Border.all(width: 1, color: Colors.amber),
                           ),
                           child: const Icon(
                             Icons.close,
