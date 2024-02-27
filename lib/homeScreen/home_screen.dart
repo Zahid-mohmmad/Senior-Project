@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
@@ -20,6 +21,11 @@ import 'package:uober/controllers/manage_drivers.dart';
 import 'package:uober/controllers/push_notication.dart';
 import 'package:uober/global/global_variable.dart';
 import 'package:uober/global/trip_var.dart';
+import 'package:uober/homeScreen/Setting_screen.dart';
+import 'package:uober/homeScreen/about_us_screen.dart';
+import 'package:uober/homeScreen/complain_screen.dart';
+import 'package:uober/homeScreen/help_support_screen.dart';
+import 'package:uober/homeScreen/history_screen.dart';
 import 'package:uober/homeScreen/rating_screen.dart';
 
 import 'package:uober/homeScreen/search_destination_screen.dart';
@@ -31,6 +37,7 @@ import 'package:uober/widgets/payment_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uober/homeScreen/dashboard.dart';
 import 'package:uober/homeScreen/notification.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -710,7 +717,7 @@ class _HomeScreenState extends State<HomeScreen> {
       requestTimeoutDriver = requestTimeoutDriver - 1;
       if (stateOfApp != "requesting") {
         timer.cancel();
-        currentDriverRef.set("canceelled");
+        currentDriverRef.set("cancelled");
         currentDriverRef.onDisconnect();
         requestTimeoutDriver = 20;
       }
@@ -751,87 +758,346 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.white,
             child: ListView(
               children: [
-                //header
+                // Header
                 Container(
-                  color: Colors.blue,
-                  height: 160,
-                  child: DrawerHeader(
-                    decoration: const BoxDecoration(color: Colors.blue),
-                    child: Row(
+                  color: Colors.white, // Changed color to white
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 190,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 0.0),
+                            child: Row(
+                              children: [
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    // Handle back button action
+                                    Navigator.pop(context);
+                                  },
+                                  alignment: Alignment.bottomLeft,
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(
+                                    width:
+                                        8), // Added spacing between arrow and text
+                                const Text(
+                                  "Back", // Text "Back" next to back arrow
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16), // Added vertical space
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black,
+                              image: userimage.isNotEmpty
+                                  ? DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(userimage),
+                                    )
+                                  : null,
+                            ),
+                            child: userimage.isNotEmpty
+                                ? null
+                                : FutureBuilder(
+                                    future: FirebaseStorage.instance
+                                        .ref()
+                                        .child(
+                                            "https://firebasestorage.googleapis.com/v0/b/uober-1ea68.appspot.com/o/driveral.png?alt=media&token=abd48096-2a5c-46ad-a0d4-f0db74faff68")
+                                        .getDownloadURL(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        if (snapshot.hasError) {
+                                          return Center(
+                                            child: Text(
+                                                'Error: ${snapshot.error}'),
+                                          );
+                                        } else if (snapshot.hasData) {
+                                          return Image.network(
+                                            snapshot.data!,
+                                            fit: BoxFit.cover,
+                                          );
+                                        }
+                                      }
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
+                                  ),
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(height: 20), // Added vertical space
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userName
+                                .toString()
+                                .capitalize!, // Capitalize the first letter of driverName
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            userEmail,
+                            style: const TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                Divider(
+                  height: 1,
+                  color: Colors.grey[400],
+                  thickness: 1,
+                ),
+
+                // Body
+                ListTile(
+                  title: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TripsHistoryScreen()),
+                      );
+                    },
+                    child: const Row(
                       children: [
-                        const Icon(
-                          Icons.person,
-                          size: 60,
+                        Icon(
+                          Icons.history,
+                          color: Colors.black,
                         ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              userName,
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
-                            ),
-                            Text(
-                              "Profile",
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
+                        SizedBox(width: 12), // Adjust the width as needed
+                        Text(
+                          "History",
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-
-                const Divider(
+                Divider(
                   height: 1,
-                  color: Colors.white,
+                  color: Colors.grey[400],
                   thickness: 1,
                 ),
 
-                const SizedBox(
-                  height: 10,
+                ListTile(
+                  title: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ComplainScreen()),
+                      );
+                    },
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 1.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.message_rounded,
+                              color: Colors.black,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "Complain",
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
 
-                //body
+                Divider(
+                  height: 1,
+                  color: Colors.grey[400],
+                  thickness: 1,
+                ),
 
                 ListTile(
-                  leading: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.info,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AboutUsScreen()),
+                    );
+                  },
+                  leading: const Icon(
+                    Icons.info,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    'About Us',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
                       color: Colors.black,
                     ),
                   ),
-                  title: Text(
-                    "About",
-                    style: GoogleFonts.roboto(color: Colors.black),
+                ),
+
+                Divider(
+                  height: 1,
+                  color: Colors.grey[400],
+                  thickness: 1,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    // Navigate to the settings page when the ListTile is tapped
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                    );
+                  },
+                  child: const ListTile(
+                    leading: Icon(
+                      Icons.settings,
+                      color: Colors.black,
+                    ),
+                    title: Text(
+                      'Settings',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
+                ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey[400],
+                  thickness: 1,
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HelpSupportScreen()),
+                    );
+                  },
+                  leading: const Icon(
+                    Icons.help,
+                    color: Colors.black,
+                  ),
+                  title: const Text(
+                    'Help and Support',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+
+                Divider(
+                  height: 1,
+                  color: Colors.grey[400],
+                  thickness: 1,
                 ),
 
                 GestureDetector(
                   onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    Get.to(const LoginScreen());
+                    // Navigate to the settings page when the ListTile is tapped
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (c) => SettingsPage()),
+                    );
                   },
-                  child: ListTile(
-                    leading: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.logout,
+                  child: const ListTile(
+                    leading: Icon(
+                      Icons.settings,
+                      color: Colors.black,
+                    ),
+                    title: Text(
+                      'Settings',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
                         color: Colors.black,
                       ),
                     ),
-                    title: Text(
-                      "Logout",
-                      style: GoogleFonts.roboto(color: Colors.grey),
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: Colors.grey[400],
+                  thickness: 1,
+                ),
+                ListTile(
+                  title: GestureDetector(
+                    onTap: () async {
+                      // Implement logout functionality here
+                      await FirebaseAuth.instance.signOut();
+                      // Navigate to the login screen
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
+                      );
+                    },
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.logout_outlined,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Logout",
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -945,13 +1211,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Container(
                           width: double.infinity,
                           height: 50, // Adjust the height as needed
-                          margin: EdgeInsets.symmetric(vertical: 12),
+                          margin: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: Colors.amber),
                             color: Colors.white,
                           ),
-                          child: Material(
+                          child: const Material(
                             color: Colors.transparent,
                             child: Center(
                               child: Padding(
@@ -965,7 +1231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     SizedBox(width: 20),
                                     Text(
-                                      "Where would you go?",
+                                      "Where would you like to go?",
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                   ],
@@ -994,7 +1260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.amber,
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               "Ride Now",
                               style: TextStyle(color: Colors.white),
@@ -1016,17 +1282,17 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: rideDetailsContainerHeight,
                 decoration: const BoxDecoration(
-                  color: Colors.black,
+                  color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     topRight: Radius.circular(15),
                   ),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 15.0,
+                        color: Colors.white,
+                        blurRadius: 1.0,
                         spreadRadius: 0.5,
-                        offset: Offset(0.7, 0.7)),
+                        offset: Offset(2, 2)),
                   ],
                 ),
                 child: Padding(
@@ -1039,12 +1305,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, right: 16),
                         child: SizedBox(
-                          height: 190,
+                          height: 260,
                           child: Card(
                             elevation: 18,
                             child: Container(
-                              width: MediaQuery.of(context).size.width * .70,
-                              color: Colors.black,
+                              width: MediaQuery.of(context).size.width * .90,
+                              color: Colors.white,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.only(top: 8.0, bottom: 8),
@@ -1065,7 +1331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 : "",
                                             style: GoogleFonts.montserrat(
                                                 fontSize: 16,
-                                                color: Colors.white70,
+                                                color: Colors.orange,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
@@ -1075,43 +1341,44 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 : "",
                                             style: GoogleFonts.montserrat(
                                                 fontSize: 16,
-                                                color: Colors.white70,
+                                                color: Colors.orange,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ],
                                       ),
                                     ),
                                     GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            stateOfApp = "requesting";
-                                          });
+                                      onTap: () {
+                                        setState(() {
+                                          stateOfApp = "requesting";
+                                        });
 
-                                          displayRequestContainer();
+                                        displayRequestContainer();
 
-                                          //get nearest available drivers
+                                        //get nearest available drivers
 
-                                          //assign the list of online drivers to this list
-                                          availableNearbyDriversList =
-                                              ManageDriversMethods
-                                                  .withinRadiusOnlineDriversList;
+                                        //assign the list of online drivers to this list
+                                        availableNearbyDriversList =
+                                            ManageDriversMethods
+                                                .withinRadiusOnlineDriversList;
 
-                                          //search driver until the request is accepted
-                                          searchDriver();
-                                        },
-                                        child: Image.asset(
-                                          "images/car-rental.png",
-                                          height: 100,
-                                          width: 100,
-                                          color: Colors.orange,
-                                        )),
+                                        //search driver until the request is accepted
+                                        searchDriver();
+                                      },
+                                      child: Image.asset(
+                                        "images/car-rental.png",
+                                        height: 100,
+                                        width: 100,
+                                        color: Colors.orange,
+                                      ),
+                                    ),
                                     Text(
                                       (directionDetailsInstance != null)
                                           ? "BHD ${(authenticationController.calculateFareAmount(directionDetailsInstance!)).toStringAsFixed(1)}"
                                           : "",
                                       style: GoogleFonts.montserrat(
                                         fontSize: 18,
-                                        color: Colors.white70,
+                                        color: Colors.orange,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -1142,7 +1409,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         topRight: Radius.circular(16)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black,
+                        color: Colors.white,
                         blurRadius: 0.0,
                         spreadRadius: 0.5,
                         offset: Offset(0.7, 0.7),
@@ -1160,8 +1427,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         width: 200,
                         child: LoadingAnimationWidget.flickr(
-                            leftDotColor: Colors.orange,
-                            rightDotColor: Colors.white,
+                            leftDotColor: Colors.amber,
+                            rightDotColor:
+                                const Color.fromARGB(255, 3, 62, 111),
                             size: 60),
                       ),
                       const SizedBox(
@@ -1176,13 +1444,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 50,
                           width: 50,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(25),
                             border: Border.all(width: 1, color: Colors.orange),
                           ),
                           child: const Icon(
                             Icons.close,
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 2, 64, 114),
                             size: 30,
                           ),
                         ),
@@ -1203,14 +1471,14 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: tripContainerHeight,
                 decoration: const BoxDecoration(
-                  color: Colors.black, // Added background color for visibility
+                  color: Colors.white, // Added background color for visibility
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black,
+                      color: Colors.white,
                       blurRadius: 0.5, // Adjusted blur radius for shadow
                       spreadRadius: 0.5,
                       offset: Offset(0.0, 0.0),
@@ -1233,7 +1501,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               tripStatusDisplay,
                               style: GoogleFonts.roboto(
                                 fontSize: 19,
-                                color: Colors.white,
+                                color: const Color.fromARGB(255, 2, 68, 122),
                                 fontWeight: FontWeight.bold,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -1275,21 +1543,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 nameDriver,
                                 style: GoogleFonts.roboto(
                                     fontSize: 29,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 driverGender,
                                 style: GoogleFonts.roboto(
                                   fontSize: 16,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                               Text(
                                 carDetailsDriver,
                                 style: GoogleFonts.roboto(
                                   fontSize: 16,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -1327,7 +1595,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   child: const Icon(
                                     Icons.call,
-                                    color: Colors.green,
+                                    color: Colors.orange,
                                   ),
                                 ),
                               ],
@@ -1382,8 +1650,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   child: const Icon(
-                                    Icons.chat,
-                                    color: Colors.green,
+                                    FontAwesomeIcons.whatsapp,
+                                    color: Colors.orange,
                                   ),
                                 ),
                               ],

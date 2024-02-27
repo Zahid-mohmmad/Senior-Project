@@ -56,6 +56,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 20),
+              Container(
+                width: 180,
+                height: 180,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(userimage),
+                  ),
+                ),
+              ),
               const SizedBox(height: 15),
               Text(
                 userName[0].toUpperCase() +
@@ -121,6 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 20), // Add space before the new button
             ],
           ),
         ),

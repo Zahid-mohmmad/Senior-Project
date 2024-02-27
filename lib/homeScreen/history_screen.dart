@@ -11,7 +11,7 @@ class TripsHistoryScreen extends StatefulWidget {
 }
 
 class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
-  final completedTripRequestsOfCurrentDriver =
+  final completedTripRequestsOfCurrentUser =
       FirebaseDatabase.instance.ref().child("tripRequest");
 
   bool _isCancelledSelected = true;
@@ -49,7 +49,8 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
       body: Column(
         children: [
           const SizedBox(
-              height: 20), // Add some space between AppBar and ListView
+            height: 20,
+          ), // Add some space between AppBar and ListView
           Container(
             color: Colors.amber, // Background color of toggle buttons
             child: ToggleButtons(
@@ -97,7 +98,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
           ),
           Expanded(
             child: StreamBuilder(
-              stream: completedTripRequestsOfCurrentDriver.onValue,
+              stream: completedTripRequestsOfCurrentUser.onValue,
               builder: (BuildContext context, snapshotData) {
                 if (snapshotData.hasError) {
                   return _buildNoRecordsAvailable();
@@ -127,7 +128,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
                       // Show cancelled trips
                       if (tripsList[index]["status"] != null &&
                           tripsList[index]["status"] == "cancelled" &&
-                          tripsList[index]["driverID"] ==
+                          tripsList[index]["userID"] ==
                               FirebaseAuth.instance.currentUser!.uid) {
                         return _buildTripContainer(tripsList[index]);
                       } else {
@@ -137,7 +138,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
                       // Show completed trips
                       if (tripsList[index]["status"] != null &&
                           tripsList[index]["status"] == "ended" &&
-                          tripsList[index]["driverID"] ==
+                          tripsList[index]["userID"] ==
                               FirebaseAuth.instance.currentUser!.uid) {
                         return _buildTripContainer(tripsList[index]);
                       } else {
@@ -154,10 +155,7 @@ class _TripsHistoryScreenState extends State<TripsHistoryScreen> {
     );
   }
 
-  Widget _buildTripContainer(Map trip) {
-    const SizedBox(
-      height: 20,
-    );
+  Widget _buildTripContainer(Map<dynamic, dynamic> trip) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
