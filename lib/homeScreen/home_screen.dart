@@ -1167,7 +1167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.amber,
                         borderRadius: BorderRadius.circular(5)),
                     child: IconButton(
                         icon: const Icon(Icons.notifications,
@@ -1278,21 +1278,23 @@ class _HomeScreenState extends State<HomeScreen> {
             Positioned(
               left: 0,
               right: 0,
-              bottom: 0,
+              bottom: MediaQuery.of(context).viewInsets.bottom,
               child: Container(
-                height: rideDetailsContainerHeight,
+                height:
+                    rideDetailsContainerHeight * 1.1, // Increase height by 10%
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.amber, // Change background color to amber
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
                   ),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.white,
-                        blurRadius: 1.0,
-                        spreadRadius: 0.5,
-                        offset: Offset(2, 2)),
+                      color: Colors.white,
+                      blurRadius: 1.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(2, 2),
+                    ),
                   ],
                 ),
                 child: Padding(
@@ -1308,9 +1310,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 260,
                           child: Card(
                             elevation: 18,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
                             child: Container(
                               width: MediaQuery.of(context).size.width * .90,
-                              color: Colors.white,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 3, 62, 111),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
                               child: Padding(
                                 padding:
                                     const EdgeInsets.only(top: 8.0, bottom: 8),
@@ -1330,9 +1338,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .distanceTextString!
                                                 : "",
                                             style: GoogleFonts.montserrat(
-                                                fontSize: 16,
-                                                color: Colors.orange,
-                                                fontWeight: FontWeight.bold),
+                                              fontSize: 16,
+                                              color: Colors.amber,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                           Text(
                                             (directionDetailsInstance != null)
@@ -1340,36 +1349,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .durationTextString!
                                                 : "",
                                             style: GoogleFonts.montserrat(
-                                                fontSize: 16,
-                                                color: Colors.orange,
-                                                fontWeight: FontWeight.bold),
+                                              fontSize: 16,
+                                              color: Colors.amber,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ],
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          stateOfApp = "requesting";
-                                        });
-
-                                        displayRequestContainer();
-
-                                        //get nearest available drivers
-
-                                        //assign the list of online drivers to this list
-                                        availableNearbyDriversList =
-                                            ManageDriversMethods
-                                                .withinRadiusOnlineDriversList;
-
-                                        //search driver until the request is accepted
-                                        searchDriver();
-                                      },
-                                      child: Image.asset(
-                                        "images/car-rental.png",
-                                        height: 100,
-                                        width: 100,
-                                        color: Colors.orange,
                                       ),
                                     ),
                                     Text(
@@ -1378,8 +1363,56 @@ class _HomeScreenState extends State<HomeScreen> {
                                           : "",
                                       style: GoogleFonts.montserrat(
                                         fontSize: 18,
-                                        color: Colors.orange,
+                                        color: Colors
+                                            .amber, // Change text color to white
                                         fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          stateOfApp = "requesting";
+                                        });
+                                        displayRequestContainer();
+                                        availableNearbyDriversList =
+                                            ManageDriversMethods
+                                                .withinRadiusOnlineDriversList;
+                                        searchDriver();
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors
+                                                  .amber, // Change background color to amber
+                                              border: Border.all(
+                                                  color: Colors.amber,
+                                                  width: 2),
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                            ),
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Image.asset(
+                                                  "images/car-rental.png",
+                                                  height: 100,
+                                                  width: 100,
+                                                  color: const Color.fromARGB(
+                                                      255, 3, 62, 111),
+                                                ),
+                                                /* Text(
+                                                  'Request',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    color: Colors.,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),*/
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
@@ -1394,9 +1427,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
-            //request container
-
             Positioned(
               left: 0,
               right: 0,
@@ -1497,14 +1527,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: Text(
-                              tripStatusDisplay,
-                              style: GoogleFonts.roboto(
-                                fontSize: 19,
-                                color: const Color.fromARGB(255, 2, 68, 122),
-                                fontWeight: FontWeight.bold,
+                            child: Center(
+                              child: Text(
+                                tripStatusDisplay,
+                                style: GoogleFonts.roboto(
+                                  fontSize: 19,
+                                  color: const Color.fromARGB(255, 2, 68, 122),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           // Other widgets in the Row
