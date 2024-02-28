@@ -220,6 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
             userName = (snap.snapshot.value as Map)["name"];
             userPhone = (snap.snapshot.value as Map)["phone"];
             gender = (snap.snapshot.value as Map)["gender"];
+            userimage = (snap.snapshot.value as Map)["photo"];
+            userEmail = (snap.snapshot.value as Map)["email"];
           });
         } else {
           FirebaseAuth.instance.signOut();
@@ -859,7 +861,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .capitalize!, // Capitalize the first letter of driverName
                             style: const TextStyle(
                               fontFamily: 'Poppins',
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
