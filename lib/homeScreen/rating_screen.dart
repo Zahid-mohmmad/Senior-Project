@@ -51,18 +51,20 @@ class _RatingScreenState extends State<RatingScreen> {
 
   void _saveRating() {
     DatabaseReference rateDriverRef = FirebaseDatabase.instance
-        .reference()
+        .ref()
         .child("drivers")
         .child(widget.driverId!)
         .child("ratings");
 
     rateDriverRef.once().then((DatabaseEvent snapshot) {
       if (!snapshot.snapshot.exists) {
-        rateDriverRef.set(cRatingStars.toString());
+        rateDriverRef.set(
+            cRatingStars.toStringAsFixed(1)); // Save with one decimal place
       } else {
         double oldRatings = double.parse(snapshot.snapshot.value.toString());
         double avgRating = (oldRatings + cRatingStars) / 2;
-        rateDriverRef.set(avgRating.toString());
+        rateDriverRef
+            .set(avgRating.toStringAsFixed(1)); // Save with one decimal place
       }
     });
   }

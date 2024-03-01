@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uober/homeScreen/advance_b.dart';
 import 'package:uober/homeScreen/home_screen.dart';
 import 'package:uober/homeScreen/profile_screen.dart';
 
@@ -38,16 +39,16 @@ class _DashboardState extends State<Dashboard> {
       body: PageView(
         controller: pageController,
         onPageChanged: onPageChanged,
-        children: const [
-          HomeScreen(),
-          // EarningsScreen(),
-          ProfileScreen(),
+        children: [
+          const HomeScreen(),
+          DriversListingPage(),
+          const ProfileScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
-            icon: const Icon(
+            icon: Icon(
               Icons.home,
               color: Colors.black,
             ),
@@ -55,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           BottomNavigationBarItem(
             icon: Hexagon(
-              child: const Icon(
+              child: Icon(
                 Icons.wallet,
                 color: Colors.black,
                 size: 31,
@@ -64,7 +65,7 @@ class _DashboardState extends State<Dashboard> {
             label: "Wallet",
           ),
           BottomNavigationBarItem(
-            icon: const Icon(
+            icon: Icon(
               Icons.person,
               color: Colors.black,
             ),

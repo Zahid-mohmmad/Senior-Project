@@ -23,6 +23,7 @@ import 'package:uober/global/global_variable.dart';
 import 'package:uober/global/trip_var.dart';
 import 'package:uober/homeScreen/Setting_screen.dart';
 import 'package:uober/homeScreen/about_us_screen.dart';
+
 import 'package:uober/homeScreen/complain_screen.dart';
 import 'package:uober/homeScreen/help_support_screen.dart';
 import 'package:uober/homeScreen/history_screen.dart';
@@ -70,8 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
   BitmapDescriptor? carIconNearbyDriver;
   DatabaseReference? tripRequestReference;
   List<OnlineNearbyDrivers>? availableNearbyDriversList;
-  List<OnlineNearbyDrivers> femaleDriversList = [];
-  List<OnlineNearbyDrivers> maleDriversList = [];
 
   StreamSubscription<DatabaseEvent>? tripstreamSubscription;
   bool requestingDetailsInfo = false;
