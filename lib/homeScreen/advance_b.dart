@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -71,44 +72,178 @@ class _DriversListingPageState extends State<DriversListingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Available Drivers"),
+        title: Text(
+          "Available Drivers",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18.0,
+          ),
+        ),
+        backgroundColor: Colors.white,
       ),
-      body: ListView.builder(
-        itemCount: availableDrivers.length,
-        itemBuilder: (context, index) {
-          final driver = availableDrivers[index];
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          itemCount: availableDrivers.length,
+          itemBuilder: (context, index) {
+            final driver = availableDrivers[index];
 
-          return Card(
-            child: ListTile(
-              title: Text(driver.name),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Car Model: ${driver.carModel}"),
-                  Text("Departure to MW: 900"),
-                  Text("Departure to UTH: 800"),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => _launchWhatsApp(driver.phone),
-                        child: Icon(Icons.message, color: Colors.green),
-                      ),
-                      SizedBox(width: 30),
-                      GestureDetector(
-                        onTap: () => _makePhoneCall(driver.phone),
-                        child: Icon(Icons.phone, color: Colors.blue),
-                      ),
-                    ],
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(
+                  color: Colors.orange,
+                  width: 1.0,
+                ),
+              ),
+              child: ListTile(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                leading: CircleAvatar(
+                  backgroundColor: Color.fromARGB(255, 2, 61, 110),
+                  child: Icon(
+                    FontAwesomeIcons.circleUser,
+                    color: Colors.white,
+                    size: 30.0,
                   ),
-                ],
+                ),
+                title: Text(
+                  driver.name,
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 1, 56, 101),
+                  ),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 8.0),
+                    Row(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.car,
+                          size: 14.0,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 4.0),
+                        Text(
+                          "Car Model: ${driver.carModel}",
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4.0),
+                    Row(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.clock,
+                          size: 14.0,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 4.0),
+                        Text(
+                          "Departure to MW: 9:00",
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 4.0),
+                    Row(
+                      children: [
+                        Icon(
+                          FontAwesomeIcons.clock,
+                          size: 14.0,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 4.0),
+                        Text(
+                          "Departure to UTH: 8:00",
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () => _launchWhatsApp(driver.phone),
+                          child: Container(
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              FontAwesomeIcons.whatsapp,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16.0),
+                        GestureDetector(
+                          onTap: () => _makePhoneCall(driver.phone),
+                          child: Container(
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.amber.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.phone,
+                              color: Colors.amber,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                trailing: Container(
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    onPressed: () => bookDriver(driver),
+                    child: Text(
+                      "Book",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              trailing: ElevatedButton(
-                onPressed: () => bookDriver(driver),
-                child: Text("Book"),
-              ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

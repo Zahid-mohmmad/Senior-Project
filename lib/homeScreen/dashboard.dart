@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uober/homeScreen/advance_b.dart';
 import 'package:uober/homeScreen/home_screen.dart';
@@ -57,12 +58,12 @@ class _DashboardState extends State<Dashboard> {
           BottomNavigationBarItem(
             icon: Hexagon(
               child: Icon(
-                Icons.wallet,
+                FontAwesomeIcons.suitcase,
                 color: Colors.black,
                 size: 31,
               ),
             ),
-            label: "Wallet",
+            label: "Book",
           ),
           BottomNavigationBarItem(
             icon: Icon(
