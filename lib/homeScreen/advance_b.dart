@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uober/appInfo/app_info.dart';
 import 'package:uober/global/global_variable.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,10 +31,10 @@ class _DriversListingPageState extends State<DriversListingPage> {
         availableDrivers = snap.children
             .map((e) => DriverListing.fromMap(e.value as Map<dynamic, dynamic>))
             .toList();
-        print("Available drivers: $availableDrivers");
+        //  print("Available drivers: $availableDrivers");
       });
     } catch (error) {
-      print("Error fetching available drivers: $error");
+      //print("Error fetching available drivers: $error");
     }
   }
 
@@ -116,7 +118,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
     if (await canLaunch(whatsappUrl)) {
       await launch(whatsappUrl);
     } else {
-      print("Could not launch WhatsApp");
+      //  print("Could not launch WhatsApp");
     }
   }
 
@@ -125,7 +127,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
     if (await canLaunch(phoneUrl)) {
       await launch(phoneUrl);
     } else {
-      print("Could not make a phone call");
+      //   print("Could not make a phone call");
     }
   }
 }
@@ -164,22 +166,31 @@ class DriverListing {
 class PushNotification {
   static sendNotificationToCurrentDriver(
       String deviceToken, BuildContext context, String tripID) async {
-    //get the location where user wants to go
-    // Assuming the pickup and dropoff locations are accessible from the context
-    // You may need to replace the following lines with your actual implementation
-    String dropOffLocation = "Destination";
-    String pickUpLocation = "Origin";
+    // Retrieve the gender and user name from your user data
+    final userName = 'John Doe'; // Replace with actual user name
+    final gender = 'Male'; // Replace with actual user gender
+
+    // Get the location where the user wants to go
+    final pickUpLocation = Provider.of<AppInfo>(context, listen: false)
+        .pickuplocation!
+        .placeName
+        .toString();
+    final dropOffLocation = Provider.of<AppInfo>(context, listen: false)
+        .dropoffLocation!
+        .placeName
+        .toString();
 
     Map<String, String> headerNotificationMap = {
       "Content-Type": "application/json",
 
-      //enable the firebase messagin api and get the server key
+      // Enable the Firebase messaging API and get the server key
       "Authorization": serverKey,
     };
 
     Map titleBodyNotificationMap = {
       "title": "A Booking Request",
-      "body": "From: $pickUpLocation\nTo: $dropOffLocation",
+      "body":
+          "From: $userName\nGender: $gender\nPickup: $pickUpLocation\nDrop-off: $dropOffLocation",
     };
 
     Map dataMapNotification = {
@@ -187,10 +198,11 @@ class PushNotification {
       "id": "1",
       "status": "done",
       "tripID": tripID,
+      "userName": userName,
+      "gender": gender,
     };
 
-    //combine all three maps
-
+    // Combine all three maps
     Map bodyNotificationMap = {
       "notification": titleBodyNotificationMap,
       "data": dataMapNotification,
@@ -198,7 +210,7 @@ class PushNotification {
       "to": deviceToken,
     };
 
-    //send request to google firebase messaging api
+    // Send request to Google Firebase Messaging API
     try {
       await http.post(
         Uri.parse("https://fcm.googleapis.com/fcm/send"),
