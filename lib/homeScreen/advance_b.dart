@@ -17,13 +17,14 @@ class DriversListingPage extends StatefulWidget {
 class _DriversListingPageState extends State<DriversListingPage> {
   List<DriverListing> availableDrivers = [];
   List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Sunday'];
-  String selectedDay = 'Monday'; // Default selected day
+  String selectedDay = 'Monday';
+  String email = userEmail;
 
   @override
   void initState() {
     super.initState();
     fetchAvailableDrivers();
-    trackBookingStatusChanges(); // Track status changes when page is initialized
+    trackBookingStatusChanges();
   }
 
   void fetchAvailableDrivers() async {
@@ -63,16 +64,12 @@ class _DriversListingPageState extends State<DriversListingPage> {
 
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Assuming gender is static for now
-
     final bookingRef = FirebaseDatabase.instance.ref("bookings");
     final newBookingRef = bookingRef.push();
 
-    // Get user's pick up location
     var pickUpLocation =
         Provider.of<AppInfo>(context, listen: false).pickuplocation;
 
-    // Get current date and time
     DateTime now = DateTime.now();
     Map pickUpCoordinatesMap = {
       "latitude": pickUpLocation!.latitude.toString(),
@@ -80,7 +77,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
     };
 
     newBookingRef.set({
-      "bookingId": newBookingRef.key, // Booking ID included
+      "bookingId": newBookingRef.key,
       "driverId": driver.id,
       "userId": userId,
       "userName": userName,
@@ -93,7 +90,6 @@ class _DriversListingPageState extends State<DriversListingPage> {
       "userPhone": userPhone,
     });
 
-    // Get the driver's device token
     DatabaseReference tokenofDriver = FirebaseDatabase.instance
         .ref()
         .child("drivers")
@@ -104,7 +100,6 @@ class _DriversListingPageState extends State<DriversListingPage> {
       if (dataSnapshot.snapshot.value != null) {
         String deviceToken = dataSnapshot.snapshot.value.toString();
 
-        // Send notification to the driver
         PushNotification.sendNotificationToCurrentDriver(
             deviceToken, context, newBookingRef.key.toString(), driver);
       }
@@ -116,11 +111,9 @@ class _DriversListingPageState extends State<DriversListingPage> {
     bookingRef.onChildChanged.listen((event) {
       DataSnapshot dataSnapshot = event.snapshot;
 
-      // Explicitly cast dataSnapshot.value to Map<dynamic, dynamic>
       Map<dynamic, dynamic>? bookingData =
           dataSnapshot.value as Map<dynamic, dynamic>?;
 
-      // Check if bookingData is not null
       if (bookingData != null) {
         String bookingId = dataSnapshot.key ?? '';
         String status = bookingData['status'] ?? '';
@@ -136,16 +129,14 @@ class _DriversListingPageState extends State<DriversListingPage> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      // Delete the booking from the database
                       DatabaseReference bookingRefToDelete = FirebaseDatabase
                           .instance
                           .ref("bookings")
                           .child(bookingId);
                       bookingRefToDelete.remove().then((_) {
-                        Navigator.pop(
-                            context); // Close the dialog after deletion
+                        Navigator.pop(context);
                       }).catchError((error) {
-                        print("Error deleting booking: $error");
+                        //   print("Error deleting booking: $error");
                       });
                     },
                     child: const Text("OK"),
@@ -159,13 +150,30 @@ class _DriversListingPageState extends State<DriversListingPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("Booking Successful"),
-                content: Text(
+                title: const Text("Booking Successful"),
+                content: const Text(
                     "You have successfully booked the driver. Please be ready on time."),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        } else if (status == 'arriving') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Driver on the way"),
+                content:
+                    const Text("The driver is on their way. Please be ready."),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("OK"),
                   ),
                 ],
               );
@@ -259,7 +267,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
                         ),
                         SizedBox(width: 4.0),
                         Text(
-                          "Departure to MW: 9:00", // Default time, will be replaced with selected time
+                          "Departure to MW: 9:00",
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14.0,
@@ -278,7 +286,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
                         ),
                         SizedBox(width: 4.0),
                         Text(
-                          "Departure to UTH: 8:00", // Default time, will be replaced with selected time
+                          "Departure to UTH: 8:00",
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14.0,
@@ -303,8 +311,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
-                                value.substring(0,
-                                    3), // Shorten the day name to three letters
+                                value.substring(0, 3),
                               ),
                             );
                           }).toList(),
@@ -321,7 +328,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
                             child: const Icon(
                               FontAwesomeIcons.whatsapp,
                               color: Colors.green,
-                              size: 20.0, // Adjust icon size
+                              size: 20.0,
                             ),
                           ),
                         ),
@@ -337,7 +344,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
                             child: const Icon(
                               Icons.phone,
                               color: Colors.amber,
-                              size: 20.0, // Adjust icon size
+                              size: 20.0,
                             ),
                           ),
                         ),
@@ -422,10 +429,8 @@ class DriverListing {
       carModel: data['car_details'] != null
           ? data['car_details']['carModel'] ?? ''
           : '',
-      departureToMW:
-          data['departureToMW'] ?? '', // Add departure times from database
-      departureToUTH:
-          data['departureToUTH'] ?? '', // Add departure times from database
+      departureToMW: data['departureToMW'] ?? '',
+      departureToUTH: data['departureToUTH'] ?? '',
     );
   }
 }

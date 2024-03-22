@@ -59,6 +59,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   mailer: ^6.1.0
   font_awesome_flutter: ^10.7.0
+  flutter_email_sender: ^6.0.2
   
 
 dev_dependencies:
