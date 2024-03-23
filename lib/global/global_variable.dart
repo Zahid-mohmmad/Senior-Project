@@ -1,3 +1,4 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -10,6 +11,7 @@ String userPhone = "";
 String gender = "";
 double cRatingStars = 0.0;
 String titleRating = "";
+final audioPlayer = AssetsAudioPlayer();
 
 String userID = FirebaseAuth.instance.currentUser!.uid;
 String googleMapKey = "AIzaSyCE7a0H835hPtBcnv_MsApr9KDVHNY3U0U";

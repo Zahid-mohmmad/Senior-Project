@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -179,9 +180,37 @@ class _DriversListingPageState extends State<DriversListingPage> {
               );
             },
           );
+        } else if (status == 'arrived') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Driver has arrived"),
+                content:
+                    const Text("The driver is at your door. Please get in."),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+
+          // Play sound when the driver has arrived
+          playSound();
         }
       }
     });
+  }
+
+  void playSound() {
+    AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
+    audioPlayer.open(
+      Audio('audio/notifications-sound.mp3'),
+    );
+    audioPlayer.play();
   }
 
   @override
@@ -377,6 +406,10 @@ class _DriversListingPageState extends State<DriversListingPage> {
                     ),
                   ),
                 ),
+                onTap: () {
+                  playSound();
+                  // Any other logic you want to execute when the ListTile is tapped
+                },
               ),
             );
           },
@@ -460,7 +493,6 @@ class PushNotification {
       "Content-Type": "application/json",
       "Authorization": serverKey,
     };
-
     Map titleBodyNotificationMap = {
       "title": "A Booking Request",
       "body":
