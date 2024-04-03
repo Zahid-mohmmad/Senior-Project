@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:uober/appInfo/app_info.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uober/global/global_variable.dart';
+import 'package:uober/homeScreen/reaching.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DriversListingPage extends StatefulWidget {
@@ -39,7 +40,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
             .toList();
       });
     } catch (error) {
-      print("Error fetching available drivers: $error");
+      //print("Error fetching available drivers: $error");
     }
   }
 
@@ -157,7 +158,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text("OK"),
+                    child: const Text("OK"),
                   ),
                 ],
               );
@@ -180,6 +181,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
               );
             },
           );
+          playSound();
         } else if (status == 'arrived') {
           showDialog(
             context: context,
@@ -200,6 +202,30 @@ class _DriversListingPageState extends State<DriversListingPage> {
 
           // Play sound when the driver has arrived
           playSound();
+        } else if (status == "reaching") {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Taking you to your classes"),
+                content:
+                    const Text("Preparing to navigate to reaching class..."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Reaching()),
+                      );
+                    },
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
         }
       }
     });
@@ -432,7 +458,7 @@ class _DriversListingPageState extends State<DriversListingPage> {
     if (await canLaunch(phoneUrl)) {
       await launch(phoneUrl);
     } else {
-      print("Could not make a phone call");
+      //  print("Could not make a phone call");
     }
   }
 }
