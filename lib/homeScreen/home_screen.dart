@@ -899,7 +899,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Icon(
                           Icons.history,
-                          color: Colors.black,
+                          color: Colors.amber,
                         ),
                         SizedBox(width: 12), // Adjust the width as needed
                         Text(
@@ -908,6 +908,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontFamily: 'Poppins',
                             fontSize: 16,
                             color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
@@ -937,7 +938,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Icon(
                               Icons.message_rounded,
-                              color: Colors.black,
+                              color: Colors.amber,
                             ),
                             SizedBox(width: 8),
                             Text(
@@ -946,6 +947,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontFamily: 'Poppins',
                                 fontSize: 16,
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -970,7 +972,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   leading: const Icon(
                     Icons.info,
-                    color: Colors.black,
+                    color: Colors.amber,
                   ),
                   title: const Text(
                     'About Us',
@@ -978,6 +980,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontFamily: 'Poppins',
                       fontSize: 16,
                       color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -987,34 +990,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.grey[400],
                   thickness: 1,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    // Navigate to the settings page when the ListTile is tapped
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SettingsPage()),
-                    );
-                  },
-                  child: const ListTile(
-                    leading: Icon(
-                      Icons.settings,
-                      color: Colors.black,
-                    ),
-                    title: Text(
-                      'Settings',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                Divider(
-                  height: 1,
-                  color: Colors.grey[400],
-                  thickness: 1,
-                ),
+
                 ListTile(
                   onTap: () {
                     Navigator.push(
@@ -1025,7 +1001,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   leading: const Icon(
                     Icons.help,
-                    color: Colors.black,
+                    color: Colors.amber,
                   ),
                   title: const Text(
                     'Help and Support',
@@ -1033,6 +1009,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontFamily: 'Poppins',
                       fontSize: 16,
                       color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -1054,7 +1031,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const ListTile(
                     leading: Icon(
                       Icons.settings,
-                      color: Colors.black,
+                      color: Colors.amber,
                     ),
                     title: Text(
                       'Settings',
@@ -1062,6 +1039,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontFamily: 'Poppins',
                         fontSize: 16,
                         color: Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -1087,7 +1065,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Icon(
                           Icons.logout_outlined,
-                          color: Colors.black,
+                          color: Colors.amber,
                         ),
                         SizedBox(width: 8),
                         Text(
@@ -1096,6 +1074,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontFamily: 'Poppins',
                             fontSize: 16,
                             color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
