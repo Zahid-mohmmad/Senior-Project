@@ -6,6 +6,9 @@ import 'package:uober/authentication/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatelessWidget {
+  final BuildContext appContext; // Add this line
+
+  const SettingsPage({required this.appContext});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,7 +315,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: SettingsPage(),
+      home: SettingsPage(
+        appContext: context,
+      ),
     );
   }
 }

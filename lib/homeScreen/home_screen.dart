@@ -1025,7 +1025,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     // Navigate to the settings page when the ListTile is tapped
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (c) => SettingsPage()),
+                      MaterialPageRoute(
+                          builder: (c) => SettingsPage(
+                                appContext: context,
+                              )),
                     );
                   },
                   child: const ListTile(

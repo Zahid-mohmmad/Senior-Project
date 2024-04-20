@@ -4,7 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:uober/authentication/login_screen.dart';
 import 'package:uober/global/global_variable.dart';
+import 'package:uober/homeScreen/Setting_screen.dart';
 import 'package:uober/homeScreen/edit_profile.dart';
+import 'package:uober/homeScreen/help_support_screen.dart';
+import 'package:uober/homeScreen/rating_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -38,9 +41,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.amber,
         title: Text(
           'Profile',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.roboto(
+            fontSize: 30,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
@@ -53,90 +58,147 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
               Container(
-                width: 180,
-                height: 180,
+                padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(userimage),
-                  ),
+                  border: Border.all(color: Colors.amber),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userName[0].toUpperCase() + userName.substring(1),
+                            style: GoogleFonts.roboto(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              const Icon(Icons.phone, color: Colors.amber),
+                              const SizedBox(width: 10),
+                              Text(
+                                userPhone,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              const Icon(Icons.email, color: Colors.amber),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  FirebaseAuth.instance.currentUser!.email
+                                      .toString(),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 20),
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(userimage),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 15),
-              Text(
-                userName[0].toUpperCase() +
-                    userName.substring(1), // Capitalize first letter of name
-                style: GoogleFonts.roboto(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+              const SizedBox(height: 10),
+              buildCustomButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (c) => const EditProfileScreen(),
+                    ),
+                  );
+                },
+                icon: Icons.edit,
+                label: "Edit Profile",
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      FirebaseAuth.instance.signOut();
-                      Get.to(const LoginScreen());
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+              const SizedBox(height: 10),
+              const Divider(color: Colors.black),
+              const SizedBox(height: 10),
+              buildCustomButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingsPage(appContext: context),
                     ),
-                    child: Text(
-                      "Logout",
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (c) => const EditProfileScreen(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(26, 42, 65, 1.0),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      "Edit Profile",
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                },
+                icon: Icons.settings,
+                label: "Settings",
               ),
-              const SizedBox(height: 20), // Add space before the new button
+              const SizedBox(height: 10),
+              const Divider(color: Colors.black),
+              const SizedBox(height: 10),
+              buildCustomButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HelpSupportScreen(),
+                    ),
+                  );
+                },
+                icon: Icons.help,
+                label: "Help & Support",
+              ),
+              const SizedBox(height: 10),
+              const Divider(color: Colors.black),
+              const SizedBox(height: 10),
+              buildCustomButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+                  Get.to(const LoginScreen());
+                },
+                icon: Icons.logout,
+                label: "Logout",
+              ),
+              const SizedBox(height: 10),
+              const Divider(color: Colors.black),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCustomButton({
+    required VoidCallback onPressed,
+    required IconData icon,
+    required String label,
+  }) {
+    return TextButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, color: Colors.amber),
+      label: Text(
+        label,
+        style: GoogleFonts.poppins(
+          fontSize: 15,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
