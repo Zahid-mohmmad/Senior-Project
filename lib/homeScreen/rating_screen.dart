@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
               builder: (BuildContext context) => RatingScreen(driverId: '123'),
             );
           },
-          child: Text('Rate Driver'),
+          child: const Text('Rate Driver'),
         ),
       ),
     );

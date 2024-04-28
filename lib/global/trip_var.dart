@@ -6,3 +6,4 @@ String status = "";
 String carDetailsDriver = "";
 String tripStatusDisplay = "Driver is Arriving";
 String driverGender = "";
+String identityCard = "";

@@ -5,11 +5,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uober/authentication/signup_screen.dart';
 import 'package:uober/controllers/authentication_controller.dart';
-import 'package:uober/global/global_variable.dart';
-import 'package:uober/homeScreen/home_screen.dart';
+import 'package:uober/homeScreen/dashboard.dart';
 import 'package:uober/widgets/custom_text_field_widget.dart';
 import 'package:uober/widgets/loading_dialog.dart';
-import 'package:uober/homeScreen/dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -26,16 +24,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   checkIfNetworkIsAvailable() {
     controllerAuth.checkConnectivity(context);
-
     signInFormValidation();
   }
 
   signInFormValidation() {
     if (!emailtextEditingController.text.contains("@stu.uob.edu.bh")) {
       Get.snackbar(
-          "email incorrect", "Please use your university email to login");
+          "Email incorrect", "Please use your university email to login");
     } else if (passwordtextEditingController.text.trim().length < 8) {
-      Get.snackbar("password incorrect", "Please use a valid password");
+      Get.snackbar("Password incorrect", "Please use a valid password");
     } else {
       signInUser();
     }
@@ -70,10 +67,32 @@ class _LoginScreenState extends State<LoginScreen> {
           .child(userFirebase.uid);
       usersRef.once().then((snap) {
         if (snap.snapshot.value != null) {
-          if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
-            userName = (snap.snapshot.value as Map)["name"];
-            userPhone = (snap.snapshot.value as Map)["phone"];
-            var userGender = (snap.snapshot.value as Map)["gender"];
+          if (!userFirebase.emailVerified) {
+            Get.dialog(
+              AlertDialog(
+                title: const Text('Email Not Verified'),
+                content: const Text(
+                    'Your email address has not been verified. Do you want to resend the verification email?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () async {
+                      await userFirebase.sendEmailVerification();
+                      Get.back();
+                      Get.snackbar('Email Sent',
+                          'Verification email has been resent to ${userFirebase.email}.');
+                    },
+                    child: const Text('Resend Email'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          } else if ((snap.snapshot.value as Map)["blockStatus"] == "no") {
             Navigator.push(
                 context, MaterialPageRoute(builder: (c) => Dashboard()));
           } else {
@@ -134,8 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       "images/logo3.png",
                       width: 200,
                       height: 200,
-                      fit: BoxFit
-                          .fill, // Use BoxFit.fill to stretch the image to cover the circular area
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),

@@ -527,6 +527,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if ((eventSnapshot.snapshot.value as Map)["carDetails"] != null) {
         carDetailsDriver = (eventSnapshot.snapshot.value as Map)["carDetails"];
       }
+      if ((eventSnapshot.snapshot.value as Map)["identityCard"] != null) {
+        identityCard = (eventSnapshot.snapshot.value as Map)["identityCard"];
+      }
 
       if ((eventSnapshot.snapshot.value as Map)["status"] != null) {
         status = (eventSnapshot.snapshot.value as Map)["status"];
@@ -1593,6 +1596,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.black,
                                 ),
                               ),
+                              // Identity card details
+                              Text(
+                                "CPR: $identityCard",
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ],
                           ),
                         ],
@@ -1640,7 +1651,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               final phone =
                                   "973$phoneNumberDriver"; // Concatenating Bahrain country code
                               const message =
-                                  "Hello, I'm the one who requested for the ride ."; //  pre-filled message
+                                  "Hello, I'm the one who requested for the ride."; //  pre-filled message
                               final url =
                                   "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
 
@@ -1697,6 +1708,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+
+            //the last positioned
           ],
         ),
       ),

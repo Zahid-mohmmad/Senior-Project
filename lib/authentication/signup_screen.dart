@@ -341,7 +341,7 @@ class _SignupScreenState extends State<SignupScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) =>
-          const LoadingDialog(messageText: "Registering your account..."),
+          LoadingDialog(messageText: "Registering your account..."),
     );
 
     final User? userFirebase = (await FirebaseAuth.instance
@@ -375,9 +375,13 @@ class _SignupScreenState extends State<SignupScreen> {
       "blockStatus": "no",
     };
     usersRef.set(usersDataMap);
+    
+    // Send verification email
+    await userFirebase.sendEmailVerification();
+
     Get.snackbar(
       "Registration Successful",
-      "You have successfully registered in UOBER!",
+      "A verification email has been sent. Please verify your email before logging in.",
     );
     Navigator.push(
       context,
