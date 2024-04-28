@@ -69,12 +69,17 @@ class _SignupScreenState extends State<SignupScreen> {
                 onTap: () {
                   chooseImageFromGallery();
                 },
-                child: CircleAvatar(
-                  radius: 70,
-                  backgroundImage: imageFile == null
-                      ? AssetImage("images/profile_avatar.jpg")
-                      : FileImage(File(imageFile!.path)) as ImageProvider,
-                  backgroundColor: Colors.orange,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 70.0,
+                      backgroundImage: imageFile == null
+                          ? AssetImage("images/profile_avatar.jpg")
+                          : FileImage(File(imageFile!.path)) as ImageProvider,
+                      backgroundColor: Colors.orange,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(
