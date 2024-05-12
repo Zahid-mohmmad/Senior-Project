@@ -1579,13 +1579,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               // Identity card details
-                              Text(
-                                "CPR: $identityCard",
-                                style: GoogleFonts.roboto(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                              ),
                             ],
                           ),
                         ],
