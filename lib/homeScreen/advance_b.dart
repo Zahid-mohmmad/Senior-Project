@@ -50,12 +50,12 @@ class _DriversListingPageState extends State<DriversListingPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Select a Day"),
-            content: Text("Please select a day before booking."),
+            title: const Text("Select a Day"),
+            content: const Text("Please select a day before booking."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text("OK"),
+                child: const Text("OK"),
               ),
             ],
           );

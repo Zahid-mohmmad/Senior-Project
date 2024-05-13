@@ -5,7 +5,8 @@ import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:uober/global/global_variable.dart';
-import 'package:uober/widgets/payment_dialog.dart';
+import 'package:uober/homeScreen/rating_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Reaching extends StatefulWidget {
   const Reaching({Key? key}) : super(key: key);
@@ -80,9 +81,125 @@ class _ReachingState extends State<Reaching> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return PaymentDialog(
-                  fareAmount:
-                      '1'); // Show payment dialog with fixed fare amount of 1 BHD
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                backgroundColor: Colors.black,
+                child: Container(
+                  margin: const EdgeInsets.all(5.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        height: 21,
+                      ),
+                      Text(
+                        "Pay Amount",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                        ),
+                      ),
+                      const Divider(
+                        height: 1.5,
+                        color: Colors.white,
+                        thickness: 1.0,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        "1 BHD",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          "This is fare amount 1 BHD to be charged from the student",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.amber),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 31,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        child: const Text("Pay Cash"),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final url = 'benefitpay://';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                            Navigator.pop(context);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('BenefitPay not installed'),
+                                  content: const Text(
+                                    'Please install BenefitPay to proceed.',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        child: const Text(
+                          'BenefitPay',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        child: const Text("Pay with Card"),
+                      ),
+                      const SizedBox(
+                        height: 41,
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           );
         }
