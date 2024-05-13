@@ -99,7 +99,7 @@ class _ReachingState extends State<Reaching> {
                       const SizedBox(
                         height: 21,
                       ),
-                      Text(
+                      const Text(
                         "Pay Amount",
                         style: TextStyle(
                           color: Colors.white,
@@ -114,7 +114,7 @@ class _ReachingState extends State<Reaching> {
                       const SizedBox(
                         height: 16,
                       ),
-                      Text(
+                      const Text(
                         "1 BHD",
                         style: TextStyle(
                           color: Colors.white,
@@ -122,8 +122,8 @@ class _ReachingState extends State<Reaching> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
                           "This is fare amount 1 BHD to be charged from the student",
                           textAlign: TextAlign.center,
