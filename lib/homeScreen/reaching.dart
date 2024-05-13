@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:uober/global/global_variable.dart';
-import 'package:uober/homeScreen/rating_screen.dart';
+import 'package:uober/homeScreen/dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uober/global/global_variable.dart';
 
 class Reaching extends StatefulWidget {
   const Reaching({Key? key}) : super(key: key);
@@ -151,6 +151,7 @@ class _ReachingState extends State<Reaching> {
                           if (await canLaunch(url)) {
                             await launch(url);
                             Navigator.pop(context);
+                            _navigateToDashboard();
                           } else {
                             showDialog(
                               context: context,
@@ -205,6 +206,13 @@ class _ReachingState extends State<Reaching> {
         }
       }
     });
+  }
+
+  void _navigateToDashboard() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Dashboard()),
+    );
   }
 
   @override
