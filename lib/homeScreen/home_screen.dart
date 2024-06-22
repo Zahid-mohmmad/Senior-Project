@@ -1624,8 +1624,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           GestureDetector(
                             onTap: () async {
                               ///here is the whatsapp code that doesnt work
-                              final phone =
-                                  "973${phoneNumberDriver.toString()}";
+                              var phone = "973${phoneNumberDriver.toString()}";
                               // Concatenating Bahrain country code
                               const message =
                                   "Hello, I'm the one who requested for the ride."; //  pre-filled message
@@ -1634,8 +1633,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               print(phone);
 
                               if (await canLaunch(url)) {
+                                print('URL can be launched');
                                 await launch(url);
                               } else {
+                                print('URL cannot be launched');
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
