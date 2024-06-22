@@ -1623,12 +1623,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 30),
                           GestureDetector(
                             onTap: () async {
+                              ///here is the whatsapp code that doesnt work
                               final phone =
-                                  "973$phoneNumberDriver"; // Concatenating Bahrain country code
+                                  "973${phoneNumberDriver.toString()}";
+                              // Concatenating Bahrain country code
                               const message =
                                   "Hello, I'm the one who requested for the ride."; //  pre-filled message
                               final url =
                                   "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
+                              print(phone);
 
                               if (await canLaunch(url)) {
                                 await launch(url);

@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'dart:io';
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,12 +9,11 @@ import 'package:uober/appInfo/app_info.dart';
 import 'package:uober/authentication/login_screen.dart';
 import 'package:uober/global/global_variable.dart';
 import 'package:uober/homeScreen/dashboard.dart';
-import 'package:uober/homeScreen/home_screen.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:uober/models/address_model.dart';
 import 'package:uober/models/direction_details.dart';
 
