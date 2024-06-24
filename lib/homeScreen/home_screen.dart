@@ -1623,20 +1623,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 30),
                           GestureDetector(
                             onTap: () async {
-                              ///here is the whatsapp code that doesnt work
-                              var phone = "973${phoneNumberDriver.toString()}";
-                              // Concatenating Bahrain country code
+                              var phone =
+                                  "973${phoneNumberDriver.toString()}"; // Concatenating Bahrain country code
                               const message =
                                   "Hello, I'm the one who requested for the ride."; //  pre-filled message
                               final url =
                                   "https://wa.me/$phone?text=${Uri.encodeFull(message)}";
-                              print(phone);
+
+                              // Check if phoneNumberDriver is null or empty
+                              if (phoneNumberDriver == null ||
+                                  phoneNumberDriver.isEmpty) {
+                                return;
+                              }
+
+                              // Verify context usage
+                              if (context == null) {
+                                return;
+                              }
 
                               if (await canLaunch(url)) {
-                                print('URL can be launched');
                                 await launch(url);
                               } else {
-                                print('URL cannot be launched');
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
