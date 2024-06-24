@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Geofire.initialize("onlineDrivers");
     //within the radius of 24 of the user drivers will be visable who are online
     Geofire.queryAtLocation(currentPositionOfUser!.latitude,
-            currentPositionOfUser!.longitude, 24)!
+            currentPositionOfUser!.longitude, 7)!
         .listen((driverEvent) {
       if (driverEvent != null) {
         var onlineDriverchild = driverEvent[

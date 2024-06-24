@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points_plus/flutter_polyline_points_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:uober/homeScreen/dashboard.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uober/homeScreen/dashboard.dart';
 import 'package:uober/global/global_variable.dart';
 
 class Reaching extends StatefulWidget {
@@ -66,7 +66,7 @@ class _ReachingState extends State<Reaching> {
     }
   }
 
-  void trackBookingStatusChanges() {
+  void trackBookingStatusChanges(BuildContext context) {
     final bookingRef = FirebaseDatabase.instance.ref("bookings");
     bookingRef.onChildChanged.listen((event) {
       DataSnapshot dataSnapshot = event.snapshot;
@@ -136,6 +136,7 @@ class _ReachingState extends State<Reaching> {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
+                          _navigateToDashboard(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
@@ -151,7 +152,7 @@ class _ReachingState extends State<Reaching> {
                           if (await canLaunch(url)) {
                             await launch(url);
                             Navigator.pop(context);
-                            _navigateToDashboard();
+                            _navigateToDashboard(context);
                           } else {
                             showDialog(
                               context: context,
@@ -208,7 +209,7 @@ class _ReachingState extends State<Reaching> {
     });
   }
 
-  void _navigateToDashboard() {
+  void _navigateToDashboard(BuildContext context) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const Dashboard()),
@@ -219,7 +220,7 @@ class _ReachingState extends State<Reaching> {
   void initState() {
     super.initState();
     getCurrentLocation();
-    trackBookingStatusChanges(); // Call trackBookingStatusChanges here
+    trackBookingStatusChanges(context); // Call trackBookingStatusChanges here
   }
 
   @override

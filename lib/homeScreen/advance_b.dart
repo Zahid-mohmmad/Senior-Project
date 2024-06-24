@@ -21,10 +21,14 @@ class _DriversListingPageState extends State<DriversListingPage> {
   List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Sunday'];
   String selectedDay = 'Monday';
   String email = userEmail;
+  Map<String, String> driverSelectedDays = {};
 
   @override
   void initState() {
     super.initState();
+    availableDrivers.forEach((driver) {
+      driverSelectedDays[driver.id] = 'Monday';
+    });
     fetchAvailableDrivers();
     trackBookingStatusChanges();
   }
@@ -355,10 +359,12 @@ class _DriversListingPageState extends State<DriversListingPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         DropdownButton<String>(
-                          value: selectedDay,
+                          value: driverSelectedDays.containsKey(driver.id)
+                              ? driverSelectedDays[driver.id]
+                              : 'Monday', // Changed this line
                           onChanged: (newValue) {
                             setState(() {
-                              selectedDay = newValue!;
+                              driverSelectedDays[driver.id] = newValue!;
                             });
                           },
                           items: days
@@ -421,7 +427,16 @@ class _DriversListingPageState extends State<DriversListingPage> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    onPressed: () => bookDriver(driver, selectedDay),
+                    onPressed: () {
+                      bookDriver(driver, selectedDay);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content:
+                              Text("Your request has been sent successfully"),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    },
                     child: const Text(
                       "Book",
                       style: TextStyle(
